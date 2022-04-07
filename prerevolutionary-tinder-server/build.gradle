@@ -1,0 +1,58 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+/*group = 'ru.digitalleague'
+version = '0.0.1-SNAPSHOT'*/
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-freemarker'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.flywaydb:flyway-core'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+def dbDataDriver = ''
+def dbDataUrl = ''
+def dbDataUser = ''
+def dbDataPassword = ''
+def dbDataLocation = ''
+
+file("src/main/resources/flyway.properties").withReader {
+    Properties flywayProp = new Properties()
+    flywayProp.load(it)
+    dbDataDriver = "${flywayProp.driver}"
+    dbDataUrl = "${flywayProp.url}"
+    dbDataUser = "${flywayProp.user}"
+    dbDataPassword = "${flywayProp.password}"
+    dbDataLocation = "${flywayProp.locations}"
+}
+
+/*flyway {
+    locations = [dbDataLocation]
+    driver = dbDataDriver
+    url = dbDataUrl
+    user = dbDataUser
+    password = dbDataPassword
+}*/
