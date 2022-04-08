@@ -18,15 +18,12 @@ dependencies {
 
     compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-tomcat'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'org.springframework.boot:spring-boot-actuator'
     compile 'org.springframework.retry:spring-retry'
     compile 'org.aspectj:aspectjweaver'
     compile 'org.junit.jupiter:junit-jupiter'
     compile 'org.modelmapper:modelmapper'
     compile 'io.vavr:vavr'
     compile 'commons-io:commons-io'
-    compile 'org.apache.httpcomponents:httpclient'
     compile 'org.telegram:telegrambots'
 
     compile 'org.springdoc:springdoc-openapi-ui'
