@@ -22,4 +22,21 @@ public class DefaultPersonService implements PersonService {
     public List<Person> findAll() {
         return personRepository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Person findByUserId(String userId) {
+        return personRepository.findByUserId(userId);
+    }
+
+    @Override
+    @Transactional
+    public Person save(Person person){
+        Person oldPerson = personRepository.findByUserId(person.getUserId());
+        if (oldPerson != null) {
+            person.setId(oldPerson.getId());
+        }
+        personRepository.save(person);
+        return person;
+    }
 }

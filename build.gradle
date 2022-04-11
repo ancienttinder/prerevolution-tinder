@@ -20,6 +20,10 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion"
         classpath "io.spring.gradle:dependency-management-plugin:$springDependencyManagementVersion"
         classpath "org.ajoberstar:gradle-git:1.7.2"
+        classpath("org.flywaydb:flyway-gradle-plugin:${flywayPluginVersion}") {
+            exclude group: 'org.flyway', module: 'flyway-core'
+        }
+        classpath "org.flywaydb:flyway-core:${flywayCoreVersion}"
         classpath "org.postgresql:postgresql:$postgresDriverVersion"
     }
 }
@@ -67,6 +71,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'org.ajoberstar.grgit'
+    apply plugin: 'org.flywaydb.flyway'
 
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "persons", schema = "tinder")
 @SequenceGenerator(schema = "tinder", name = "persons_s", sequenceName = "tinder.persons_s", allocationSize = 1)
-public class Person{
+public class Person {
 
     @Id
     @Column(name = "id", nullable = false)

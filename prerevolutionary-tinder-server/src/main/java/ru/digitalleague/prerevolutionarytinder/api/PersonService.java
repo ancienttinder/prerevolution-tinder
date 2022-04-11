@@ -7,4 +7,8 @@ import java.util.List;
 public interface PersonService {
 
     List<Person> findAll();
+
+    Person findByUserId(String userId);
+
+    Person save(Person person);
 }
