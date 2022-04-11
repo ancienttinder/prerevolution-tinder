@@ -25,6 +25,8 @@ dependencies {
     compile 'io.vavr:vavr'
     compile 'commons-io:commons-io'
     compile 'org.telegram:telegrambots'
+    compile 'org.telegram:telegrambots-spring-boot-starter'
+    compile 'com.mashape.unirest:unirest-java'
 
     compile 'org.springdoc:springdoc-openapi-ui'
     annotationProcessor("org.projectlombok:lombok")

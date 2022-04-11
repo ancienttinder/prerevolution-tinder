@@ -57,7 +57,10 @@ ext {
     springRetryVersion = '1.2.4.RELEASE'
     aspectjWeaverVersion = '1.9.6'
     springActuatorVersion = '2.2.13.RELEASE'
-    telegramVersion = '5.7.1'
+    telegramVersion = '4.4.0.1'
+    telegramSprintBootVersion ='4.4.0.1'
+    unirestJavaVersion = '1.4.9'
+
 }
 
 
@@ -166,6 +169,9 @@ subprojects {
             dependency "commons-io:commons-io:$commonsIoVersion"
 
             dependency "org.telegram:telegrambots:$telegramVersion"
+            dependency "org.telegram:telegrambots-spring-boot-starter:$telegramSprintBootVersion"
+            dependency "com.mashape.unirest:unirest-java:$unirestJavaVersion"
+
         }
     }
 }
