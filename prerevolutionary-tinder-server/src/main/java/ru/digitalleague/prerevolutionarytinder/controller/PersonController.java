@@ -22,8 +22,23 @@ public class PersonController {
         return personService.findAll();
     }
 
-    @GetMapping("/dict/v2/{userId}")
+    @GetMapping("/find/person/{userId}")
     public Person findPersonByUserId(@PathVariable String userId) {
-        return null;
+        return personService.findByUserId(userId);
+    }
+
+    @GetMapping("/find/choice/{userId}")
+    public Person findChoicePersonByUserId(@PathVariable String userId) {
+        return personService.findByUserId(userId);
+    }
+
+    @GetMapping("/search/persons/{userId}")
+    public List<Person> searchPersonByUserId(@PathVariable String userId) {
+        return personService.searchPerson(userId);
+    }
+
+    @GetMapping("/find/history/{userId}")
+    public List<Person> findLikeHistoryByUserId(@PathVariable String userId) {
+        return personService.findLikeHistory(userId);
     }
 }

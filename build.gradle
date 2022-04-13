@@ -1,4 +1,4 @@
-group = 'com.tinder'
+group = 'ru.digitalleague'
 version = '0.0.1-SNAPSHOT'
 
 buildscript {

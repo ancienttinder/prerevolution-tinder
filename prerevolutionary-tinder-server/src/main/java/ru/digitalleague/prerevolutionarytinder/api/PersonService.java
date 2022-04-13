@@ -11,4 +11,8 @@ public interface PersonService {
     Person findByUserId(String userId);
 
     Person save(Person person);
+
+    List<Person> searchPerson(String userId);
+
+    List<Person> findLikeHistory(String userId);
 }
