@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.digitalleague.prerevolutionarytinder.api.PersonService;
+import ru.digitalleague.prerevolutionarytinder.api.TranslateSlavonicService;
 import ru.digitalleague.prerevolutionarytinder.entity.Person;
 import ru.digitalleague.prerevolutionarytinder.repository.PersonRepository;
 
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class DefaultPersonService implements PersonService {
 
     private final PersonRepository personRepository;
+    private final TranslateSlavonicService translateSlavonicService;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,12 +38,14 @@ public class DefaultPersonService implements PersonService {
 
     @Override
     @Transactional
-    public Person save(Person person){
+    public Person save(Person person) {
         log.info("Save person");
         Person oldPerson = personRepository.findByUserId(person.getUserId());
         if (oldPerson != null) {
             person.setId(oldPerson.getId());
         }
+        person.setName(translateSlavonicService.translate(person.getName()));
+        person.setDescription(translateSlavonicService.translate(person.getDescription()));
         personRepository.save(person);
         log.info("Successfully save person: {}", person);
         return person;
@@ -68,17 +72,17 @@ public class DefaultPersonService implements PersonService {
         List<Person> likeHistory = new ArrayList<>();
         List<Person> personLikeToSome = personRepository.findChoicePersonByUserId(userId);
         List<Person> someLikeToPerson = personRepository.findChoiceSelectedByUserId(userId);
-        List<Person> mutualityLikes =  personLikeToSome.stream()
+        List<Person> mutualityLikes = personLikeToSome.stream()
                 .filter(someLikeToPerson::contains)
                 .collect(Collectors.toList());
         personLikeToSome.removeAll(mutualityLikes);
         someLikeToPerson.removeAll(mutualityLikes);
         personLikeToSome.stream()
-                .forEach(person -> person.setName(person.getName()+", Любим вами"));
+                .forEach(person -> person.setName(person.getName() + ", Любим вами"));
         someLikeToPerson.stream()
-                .forEach(person -> person.setName(person.getName()+", Вы любимы"));
+                .forEach(person -> person.setName(person.getName() + ", Вы любимы"));
         mutualityLikes.stream()
-                .forEach(person -> person.setName(person.getName()+", Взаимность"));
+                .forEach(person -> person.setName(person.getName() + ", Взаимность"));
         likeHistory.addAll(personLikeToSome);
         likeHistory.addAll(someLikeToPerson);
         likeHistory.addAll(mutualityLikes);

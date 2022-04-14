@@ -10,7 +10,7 @@ import java.util.Collection;
 public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
 
     String CHOICE_BY_PERSON_AND_SELECTED_ID_QUERY = "select row_number() over () as id, " +
-            "c.PERSON_ID        as personId" +
+            "c.PERSON_ID        as personId," +
             "c.SELECTED_ID          as selectedId" +
             "from tinder.choices c" +
             "where c.PERSON_ID = ?1" +

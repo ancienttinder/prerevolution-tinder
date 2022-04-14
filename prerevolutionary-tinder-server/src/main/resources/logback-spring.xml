@@ -10,10 +10,10 @@
     </appender>
 
     <appender name="fileAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logs/server.log</file>
+        <file>logs/prerevolutionary-tinder-server.log</file>
         <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/server.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>logs/prerevolutionary-tinder-server.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>7</maxHistory>
         </rollingPolicy>
         <encoder>
