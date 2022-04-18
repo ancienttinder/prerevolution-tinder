@@ -39,6 +39,7 @@ public class DefaultPersonService implements PersonService {
     @Override
     @Transactional
     public Person save(Person person) {
+        //todo в логи объект
         log.info("Save person");
         Person oldPerson = personRepository.findByUserId(person.getUserId());
         if (oldPerson != null) {
@@ -56,6 +57,7 @@ public class DefaultPersonService implements PersonService {
     public List<Person> searchPerson(String userId) {
         log.info("Get person by search term by userId: {}", userId);
         Person person = personRepository.findByUserId(userId);
+        //todo русских букв быть не должно. Вынести в resource.message. MessageService
         if ("Сударъ".equals(person.getSearchTerm())) {
             return personRepository.findPersonBySearchTerm(Arrays.asList(person.getGender(), "Всех"), Arrays.asList("Сударъ"));
         } else if ("Сударыня".equals(person.getSearchTerm())) {
@@ -69,20 +71,23 @@ public class DefaultPersonService implements PersonService {
     @Override
     public List<Person> findLikeHistory(String userId) {
         log.info("Get like history by userId: {}", userId);
-        List<Person> likeHistory = new ArrayList<>();
         List<Person> personLikeToSome = personRepository.findChoicePersonByUserId(userId);
         List<Person> someLikeToPerson = personRepository.findChoiceSelectedByUserId(userId);
+
         List<Person> mutualityLikes = personLikeToSome.stream()
                 .filter(someLikeToPerson::contains)
                 .collect(Collectors.toList());
         personLikeToSome.removeAll(mutualityLikes);
         someLikeToPerson.removeAll(mutualityLikes);
+        //todo русские буквы хранить нельзя.
+        //todo можно вынести в приватный метод
         personLikeToSome.stream()
                 .forEach(person -> person.setName(person.getName() + ", Любим вами"));
         someLikeToPerson.stream()
                 .forEach(person -> person.setName(person.getName() + ", Вы любимы"));
         mutualityLikes.stream()
                 .forEach(person -> person.setName(person.getName() + ", Взаимность"));
+        List<Person> likeHistory = new ArrayList<>();
         likeHistory.addAll(personLikeToSome);
         likeHistory.addAll(someLikeToPerson);
         likeHistory.addAll(mutualityLikes);

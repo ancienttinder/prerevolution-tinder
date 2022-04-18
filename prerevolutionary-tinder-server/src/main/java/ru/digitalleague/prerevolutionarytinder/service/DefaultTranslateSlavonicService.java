@@ -410,6 +410,7 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
         replaceSlavonic.put("цеп", "цѣп");
     }
 
+    //todo написать тест
     @Override
     public String translate(String rusString) {
         final String[] keys = replaceSlavonic.keySet().toArray(new String[0]);

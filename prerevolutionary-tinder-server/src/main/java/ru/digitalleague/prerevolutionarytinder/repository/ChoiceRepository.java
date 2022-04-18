@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.Query;
 import ru.digitalleague.prerevolutionarytinder.entity.Choice;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
 
+    //todo можно сокраить до Choice findByPersonIdAndSelectedId(String personId, String selectedId);
     String CHOICE_BY_PERSON_AND_SELECTED_ID_QUERY = "select row_number() over () as id, " +
             "c.PERSON_ID        as personId, " +
             "c.SELECTED_ID          as selectedId " +
@@ -18,6 +20,9 @@ public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
 
     @Query(value = CHOICE_BY_PERSON_AND_SELECTED_ID_QUERY, nativeQuery = true)
     Choice findByPersonAndSelectedId(String personId, String selectedId);
+
+    //todo альтернатива
+//    Optional<Choice> findByPersonIdAndSelectedId(String personId, String selectedId);
 
     @Modifying
     @Query(value = "delete from fccr.choices c WHERE c.id = ?1", nativeQuery = true)

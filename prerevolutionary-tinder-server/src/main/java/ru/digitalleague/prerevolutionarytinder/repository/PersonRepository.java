@@ -51,12 +51,16 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     @Query(value = PERSON_BY_USER_ID_QUERY, nativeQuery = true)
     Person findByUserId(String userId);
 
+    //todo альтернатива
+//    Person findByUserId(String userId);
+
     @Query(value = CHOICE_PERSON_BY_USER_ID_QUERY, nativeQuery = true)
     List<Person> findChoicePersonByUserId(String userId);
 
     @Query(value = CHOICE_SELECTED_BY_USER_ID_QUERY, nativeQuery = true)
     List<Person> findChoiceSelectedByUserId(String userId);
 
+    //todo альтернатива spring data
     @Query(value = PERSON_BY_SEARCH_TERM_QUERY, nativeQuery = true)
     List<Person> findPersonBySearchTerm(Collection<String> searchTerm, Collection<String> gender);
 }

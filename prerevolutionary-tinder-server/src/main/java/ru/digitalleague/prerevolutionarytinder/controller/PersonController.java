@@ -15,6 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PersonController {
 
+    //todo сделать exception handler под свои ошибки. Можно оринетрировать на fccr GlobalExceptionHandler
     private final PersonService personService;
 
     @GetMapping("/all")
@@ -33,6 +34,7 @@ public class PersonController {
     }
 
     @GetMapping("/search/persons/{userId}")
+    //todo find
     public List<Person> searchPersonByUserId(@PathVariable String userId) {
         return personService.searchPerson(userId);
     }

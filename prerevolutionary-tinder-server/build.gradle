@@ -37,20 +37,30 @@ def dbDataUser = ''
 def dbDataPassword = ''
 def dbDataLocation = ''
 
-file("src/main/resources/flyway.properties").withReader {
-    Properties flywayProp = new Properties()
-    flywayProp.load(it)
-    dbDataDriver = "${flywayProp.driver}"
-    dbDataUrl = "${flywayProp.url}"
-    dbDataUser = "${flywayProp.user}"
-    dbDataPassword = "${flywayProp.password}"
-    dbDataLocation = "${flywayProp.locations}"
+def env = 'dev'
+
+if (env == 'dev') {
+    file("src/main/resources/flyway.properties").withReader {
+        Properties flywayProp = new Properties()
+        flywayProp.load(it)
+        dbDataDriver = "${flywayProp.driver}"
+        dbDataUrl = "${flywayProp.url}"
+        dbDataUser = "${flywayProp.user}"
+        dbDataPassword = "${flywayProp.password}"
+        dbDataLocation = "${flywayProp.locations}"
+    }
+} else {
+    dbDataDriver = 'org.postgresql.Driver'
+    dbDataUrl = project.hasProperty('dbDataUrl') ? project.getProperty('dbDataUrl') : ''
+    dbDataUser = project.hasProperty('dbDataUser') ? project.getProperty('dbDataUser') : ''
+    dbDataPassword = project.hasProperty('dbDataPassword') ? project.getProperty('dbDataPassword') : ''
+    dbDataPassword = project.hasProperty('dbDataLocation') ? project.getProperty('dbDataLocation') : ''
 }
 
-/*flyway {
+flyway {
     locations = [dbDataLocation]
     driver = dbDataDriver
     url = dbDataUrl
     user = dbDataUser
     password = dbDataPassword
-}*/
+}
