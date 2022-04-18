@@ -12,37 +12,49 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//todo должна быть спрингом
+//todo почему абстрактный?
 public abstract class KeyboardSetting {
 
-    private static InlineKeyboardMarkup inlineKeyboardMarkup =new InlineKeyboardMarkup();
+    //todo константы с большими буквами INLINE_KEYBOARD_MARKUP
+    private static InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
     private static ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+    //todo убрать?
     private static String buttonsText;
+    //todo убрать, потому что ты создаешь ниже в методах
     private static List<InlineKeyboardButton> inlineKeyboardButtonsRow = new ArrayList<>();
+    //todo убрать, потому что ты создаешь ниже в методах
     private static List<KeyboardButton> keyboardButtonsRow = new ArrayList<>();
-    public static Map<String,String> hashMap = new HashMap<String,String>();
+    public static Map<String, String> hashMap = new HashMap<String, String>();
 
 
-    protected KeyboardSetting(){
-        hashMap.put("Lover","Влево!Вправо!Меню");
-        hashMap.put("Search","Влево!Вправо!Меню");
-        hashMap.put("Menu","Поиск!Анкета!Любимцы");
+    //todo это мапа должна быть в отдельном классе.
+    //todo никаких русских букв в коде
+    protected KeyboardSetting() {
+        hashMap.put("Lover", "Влево!Вправо!Меню");
+        hashMap.put("Search", "Влево!Вправо!Меню");
+        hashMap.put("Menu", "Поиск!Анкета!Любимцы");
     }
 
-    public void ChooseKeyboardType(String usageName){
+    public void ChooseKeyboardType(String usageName) {
 //        List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
-        switch (usageName){
+        switch (usageName) {
             case ("Lover"):
             case ("Search"):
-                inlineKeyboardButtonsRow = this.GetInlineKeyboard(hashMap.get(usageName));
+                //todo зачем тут this?
+                inlineKeyboardButtonsRow = GetInlineKeyboard(hashMap.get(usageName));
                 break;
             case ("Menu"):
-                keyboardButtonsRow = this.GetReplyKeyboard(hashMap.get(usageName));
+                //todo зачем тут this?
+                keyboardButtonsRow = GetReplyKeyboard(hashMap.get(usageName));
                 break;
+            default:
+                //todo тут выкидывать ошибку
         }
 
     }
 
-    private List<InlineKeyboardButton> GetInlineKeyboard(String options){
+    private List<InlineKeyboardButton> GetInlineKeyboard(String options) {
         List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
         String[] optinsArray = options.split("!");
         for (String s : optinsArray) {
@@ -54,7 +66,7 @@ public abstract class KeyboardSetting {
         return keyboardButtonsRow;
     }
 
-    private List<KeyboardButton> GetReplyKeyboard(String options){
+    private List<KeyboardButton> GetReplyKeyboard(String options) {
         List<KeyboardButton> keyboardButtonsRow = new ArrayList<>();
         String[] optinsArray = options.split("!");
         for (String s : optinsArray) {

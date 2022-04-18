@@ -13,6 +13,7 @@ public class DemoApplication {
 	public static void main(String[] args) {
 
 		ApiContextInitializer.init();
+		//todo вынести это в app prop
 		Bot bot = new Bot("AncientTinder_bot", "5030909216:AAHZsk0dKDhN_AK_D7IaOD5WWxadsWSXpEw");
 		bot.botConnect();
 	}

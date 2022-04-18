@@ -25,12 +25,17 @@ import java.util.Map;
 @NoArgsConstructor
 public class Bot extends TelegramLongPollingBot {
 
+    //todo @@Slf4j, для ее добавления ты должен взять logback-spring.xml, добавить в /resources
     private static final Logger log = Logger.getLogger(Bot.class);
+    //todo это плохо, нужно пеереложить в /resources, погугли как тянуть из resounrces файлы
     private static final File file = new File("C:\\Users\\tilikyan\\Desktop\\photo\\me.jpg");
     private static BufferedImage image;
+    //todo упустил private, это переменная должны тянуться из app.prop, и тянунять @Value
     final int RECONNECT_PAUSE =10000;
     private static KeyboardSetting keyBoard;
 
+    //todo тянуть их из application properties
+    //todo почитай про single responsibility principle
     @Setter
     @Getter
     String userName;
@@ -78,6 +83,7 @@ public class Bot extends TelegramLongPollingBot {
         return token;
     }
 
+    //todo разобраться что это такое. Вынести в отдельный класс
     public void botConnect() {
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
         try {
@@ -95,6 +101,7 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
+    //todo c большой буквы методы не называются. Нужно создать сервис, поместить код туда. В названии должен быть глагол, вызвать этот метод
     public InputStream TextToForm(String txt) throws IOException {
         image = ImageIO.read(file);
 
