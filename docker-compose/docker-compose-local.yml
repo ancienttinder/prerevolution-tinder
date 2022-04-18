@@ -1,0 +1,19 @@
+version: '2.2'
+services:
+
+  postgresql:
+    container_name: postgresql
+    image: postgres:9.6.14
+    hostname: postgresql
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: tinderdb
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: 512m
