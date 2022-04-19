@@ -21,6 +21,7 @@ public class DefaultPersonService implements PersonService {
 
     private final PersonRepository personRepository;
     private final TranslateSlavonicService translateSlavonicService;
+    private final MessageService messageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -39,8 +40,7 @@ public class DefaultPersonService implements PersonService {
     @Override
     @Transactional
     public Person save(Person person) {
-        //todo в логи объект
-        log.info("Save person");
+        log.info("Save person: {}", person);
         Person oldPerson = personRepository.findByUserId(person.getUserId());
         if (oldPerson != null) {
             person.setId(oldPerson.getId());
@@ -57,13 +57,18 @@ public class DefaultPersonService implements PersonService {
     public List<Person> searchPerson(String userId) {
         log.info("Get person by search term by userId: {}", userId);
         Person person = personRepository.findByUserId(userId);
-        //todo русских букв быть не должно. Вынести в resource.message. MessageService
-        if ("Сударъ".equals(person.getSearchTerm())) {
-            return personRepository.findPersonBySearchTerm(Arrays.asList(person.getGender(), "Всех"), Arrays.asList("Сударъ"));
-        } else if ("Сударыня".equals(person.getSearchTerm())) {
-            return personRepository.findPersonBySearchTerm(Arrays.asList(person.getGender(), "Всех"), Arrays.asList("Сударыня"));
-        } else if ("Всех".equals(person.getSearchTerm())) {
-            return personRepository.findPersonBySearchTerm(Arrays.asList(person.getGender(), "Всех"), Arrays.asList("Сударъ", "Сударыня"));
+        if (messageService.getMessage("tinder.gender.sir").equals(person.getSearchTerm())) {
+            return personRepository.findPersonBySearchTermInAndGenderIn(
+                    Arrays.asList(person.getGender(), messageService.getMessage("tinder.gender.all")),
+                    Arrays.asList(messageService.getMessage("tinder.gender.sir")));
+        } else if (messageService.getMessage("tinder.gender.madam").equals(person.getSearchTerm())) {
+            return personRepository.findPersonBySearchTermInAndGenderIn(
+                    Arrays.asList(person.getGender(), messageService.getMessage("tinder.gender.all")),
+                    Arrays.asList(messageService.getMessage("tinder.gender.madam")));
+        } else if (messageService.getMessage("tinder.gender.all").equals(person.getSearchTerm())) {
+            return personRepository.findPersonBySearchTermInAndGenderIn(
+                    Arrays.asList(person.getGender(), messageService.getMessage("tinder.gender.all")),
+                    Arrays.asList(messageService.getMessage("tinder.gender.sir"), messageService.getMessage("tinder.gender.madam")));
         }
         return null;
     }
@@ -79,18 +84,20 @@ public class DefaultPersonService implements PersonService {
                 .collect(Collectors.toList());
         personLikeToSome.removeAll(mutualityLikes);
         someLikeToPerson.removeAll(mutualityLikes);
-        //todo русские буквы хранить нельзя.
-        //todo можно вынести в приватный метод
-        personLikeToSome.stream()
-                .forEach(person -> person.setName(person.getName() + ", Любим вами"));
-        someLikeToPerson.stream()
-                .forEach(person -> person.setName(person.getName() + ", Вы любимы"));
-        mutualityLikes.stream()
-                .forEach(person -> person.setName(person.getName() + ", Взаимность"));
+
+        addMutualityToName(personLikeToSome, messageService.getMessage("tinder.type.mutuality.likeyou"));
+        addMutualityToName(someLikeToPerson, messageService.getMessage("tinder.type.mutuality.youliked"));
+        addMutualityToName(mutualityLikes, messageService.getMessage("tinder.type.mutuality.both"));
+
         List<Person> likeHistory = new ArrayList<>();
         likeHistory.addAll(personLikeToSome);
         likeHistory.addAll(someLikeToPerson);
         likeHistory.addAll(mutualityLikes);
         return likeHistory;
+    }
+
+    private void addMutualityToName(List<Person> persons, String textToAdd) {
+        persons.stream()
+                .forEach(person -> person.setName(person.getName() + ", " + textToAdd));
     }
 }

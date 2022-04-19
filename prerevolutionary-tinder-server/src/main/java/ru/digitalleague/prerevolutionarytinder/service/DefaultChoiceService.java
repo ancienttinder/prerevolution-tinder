@@ -20,28 +20,18 @@ public class DefaultChoiceService implements ChoiceService {
     @Override
     @Transactional
     public void save(Choice choice) {
-        //todo добавить в логи объект
-        log.info("Save choice");
-        //todo choice
-        Choice oldChoice = choiceRepository.findByPersonAndSelectedId(choice.getPersonId(), choice.getSelectedId());
-        if (oldChoice == null) {
-            choiceRepository.save(choice);
-        }
-
-//        Optional<Choice> oldChoice = choiceRepository.findByPersonIdAndSelectedId(choice.getPersonId(), choice.getSelectedId());
-//        oldChoice.ifPresent(it -> choiceRepository.save(choice));
+        log.info("Save choice: {}", choice);
+        Optional<Choice> existingChoice = choiceRepository.findChoiceByPersonIdAndSelectedId(choice.getPersonId(), choice.getSelectedId());
+        if (!existingChoice.isPresent()) choiceRepository.save(choice);
         log.info("Successfully saved choice: {}", choice);
     }
 
     @Override
     @Transactional
     public void delete(Choice choice) {
-        //todo добавить в логи объект
-        log.info("Delete choice");
-        Choice oldChoice = choiceRepository.findByPersonAndSelectedId(choice.getPersonId(), choice.getSelectedId());
-        if (oldChoice != null) {
-            choiceRepository.deleteChoiceById(oldChoice.getId());
-        }
+        log.info("Delete choice: {}", choice);
+        Optional<Choice> existingChoice = choiceRepository.findChoiceByPersonIdAndSelectedId(choice.getPersonId(), choice.getSelectedId());
+        if (!existingChoice.isPresent()) choiceRepository.deleteById(existingChoice.get().getId());
         log.info("Successfully delete choice: {}", choice);
     }
 

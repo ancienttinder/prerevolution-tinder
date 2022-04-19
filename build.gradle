@@ -64,7 +64,7 @@ ext {
     telegramVersion = '5.7.1'
 }
 
-
+def defaultEncoding = 'UTF-8'
 
 
 subprojects {

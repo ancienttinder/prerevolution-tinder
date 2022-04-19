@@ -412,9 +412,9 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
 
     //todo написать тест
     @Override
-    public String translate(String rusString) {
+    public String translate(String rus) {
         final String[] keys = replaceSlavonic.keySet().toArray(new String[0]);
         final String[] values = replaceSlavonic.values().toArray(new String[0]);
-        return StringUtils.replaceEach(rusString, keys, values);
+        return StringUtils.replaceEach(rus, keys, values);
     }
 }
