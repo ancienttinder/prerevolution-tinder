@@ -58,7 +58,7 @@ ext {
     aspectjWeaverVersion = '1.9.6'
     springActuatorVersion = '2.2.13.RELEASE'
     telegramVersion = '3.5'
-    telegramSprintBootVersion ='4.4.0.1'
+    telegramSprintBootVersion ='5.3.0'
     unirestJavaVersion = '1.4.9'
     jtelegramVersion = '4.0.1'
     log4jVersion = '1.2.17'
@@ -118,9 +118,9 @@ subprojects {
             dependency "javax.servlet:javax.servlet-api:$javaxServletVersion"
             dependency "javax.persistence:javax.persistence-api:$javaxPersistenceVersion"
 
-            dependency "org.springframework:spring-core:$springVersion"
-            dependency "org.springframework:spring-context:$springVersion"
-            dependency "org.springframework:spring-aspects:$springVersion"
+//            dependency "org.springframework:spring-core:$springVersion"
+//            dependency "org.springframework:spring-context:$springVersion"
+//            dependency "org.springframework:spring-aspects:$springVersion"
             dependency "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
             dependency "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
             dependency "org.springframework.boot:spring-boot-starter-tomcat:$tomcatVersion"
@@ -175,7 +175,7 @@ subprojects {
             dependency "commons-io:commons-io:$commonsIoVersion"
 
             dependency "org.telegram:telegrambots:$telegramVersion"
-            dependency "org.telegram:telegrambots-spring-boot-starter:$telegramSprintBootVersion"
+            dependency "org.telegram:telegrambots-spring-boot-starter:$springBootVersion"
             dependency "com.mashape.unirest:unirest-java:$unirestJavaVersion"
 
             dependency "com.jtelegram:jtelegrambotapi-core:$jtelegramVersion"

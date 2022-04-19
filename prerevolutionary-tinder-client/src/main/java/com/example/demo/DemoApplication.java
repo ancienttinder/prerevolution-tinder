@@ -1,7 +1,6 @@
 package com.example.demo;
 
-import com.example.demo.Bot;
-import org.apache.log4j.Logger;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.ApiContextInitializer;
 
@@ -10,12 +9,10 @@ import org.telegram.telegrambots.ApiContextInitializer;
 @SpringBootApplication
 public class DemoApplication {
 
-	public static void main(String[] args) {
 
-		ApiContextInitializer.init();
-		//todo вынести это в app prop
-		Bot bot = new Bot("AncientTinder_bot", "5030909216:AAHZsk0dKDhN_AK_D7IaOD5WWxadsWSXpEw");
-		bot.botConnect();
-	}
+    public static void main(String[] args) {
+        ApiContextInitializer.init();
+        SpringApplication.run(DemoApplication.class, args);
+    }
 
 }

@@ -1,11 +1,10 @@
 package com.example.demo;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboard;
 import org.telegram.telegrambots.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardButton;
-import org.telegram.telegrambots.api.objects.replykeyboard.buttons.KeyboardRow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,13 +13,14 @@ import java.util.Map;
 
 //todo должна быть спрингом
 //todo почему абстрактный?
-public abstract class KeyboardSetting {
+@Component
+public class KeyboardSetting {
 
     //todo константы с большими буквами INLINE_KEYBOARD_MARKUP
-    private static InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-    private static ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+    private static InlineKeyboardMarkup INLINE_KEYBOARD_MARKUP = new InlineKeyboardMarkup();
+    private static ReplyKeyboardMarkup REPLY_KEYBOARD_MARKUP = new ReplyKeyboardMarkup();
     //todo убрать?
-    private static String buttonsText;
+    private static String BUTTON_TEXT;
     //todo убрать, потому что ты создаешь ниже в методах
     private static List<InlineKeyboardButton> inlineKeyboardButtonsRow = new ArrayList<>();
     //todo убрать, потому что ты создаешь ниже в методах
@@ -36,17 +36,18 @@ public abstract class KeyboardSetting {
         hashMap.put("Menu", "Поиск!Анкета!Любимцы");
     }
 
-    public void ChooseKeyboardType(String usageName) {
+    public void chooseKeyboardType(String usageName) {
+//
 //        List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
         switch (usageName) {
             case ("Lover"):
             case ("Search"):
                 //todo зачем тут this?
-                inlineKeyboardButtonsRow = GetInlineKeyboard(hashMap.get(usageName));
+                inlineKeyboardButtonsRow = getInlineKeyboard(hashMap.get(usageName));
                 break;
             case ("Menu"):
                 //todo зачем тут this?
-                keyboardButtonsRow = GetReplyKeyboard(hashMap.get(usageName));
+                keyboardButtonsRow = getReplyKeyboard(hashMap.get(usageName));
                 break;
             default:
                 //todo тут выкидывать ошибку
@@ -54,7 +55,7 @@ public abstract class KeyboardSetting {
 
     }
 
-    private List<InlineKeyboardButton> GetInlineKeyboard(String options) {
+    private List<InlineKeyboardButton> getInlineKeyboard(String options) {
         List<InlineKeyboardButton> keyboardButtonsRow = new ArrayList<>();
         String[] optinsArray = options.split("!");
         for (String s : optinsArray) {
@@ -66,10 +67,10 @@ public abstract class KeyboardSetting {
         return keyboardButtonsRow;
     }
 
-    private List<KeyboardButton> GetReplyKeyboard(String options) {
+    private List<KeyboardButton> getReplyKeyboard(String options) {
         List<KeyboardButton> keyboardButtonsRow = new ArrayList<>();
-        String[] optinsArray = options.split("!");
-        for (String s : optinsArray) {
+        String[] optionsArray = options.split("!");
+        for (String s : optionsArray) {
             KeyboardButton button = new KeyboardButton();
             button.setText(s);
             keyboardButtonsRow.add(button);

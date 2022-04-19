@@ -28,7 +28,3 @@ dependencies {
 	compile 'org.apache.logging.log4j:log4j-core'
 	compile 'log4j:log4j'
 }
-
-tasks.named('test') {
-	useJUnitPlatform()
-}
