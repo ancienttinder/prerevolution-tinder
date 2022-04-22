@@ -1,0 +1,13 @@
+{
+  "properties": [
+    {
+      "name": "rest.service.connect.timeout",
+      "type": "java.lang.String",
+      "description": "Description for rest.service.connect.timeout."
+    },
+    {
+      "name": "rest.service.read.timeout",
+      "type": "java.lang.String",
+      "description": "Description for rest.service.read.timeout."
+    }
+  ] }

@@ -61,13 +61,16 @@ ext {
     springRetryVersion = '1.2.4.RELEASE'
     aspectjWeaverVersion = '1.9.6'
     springActuatorVersion = '2.2.13.RELEASE'
-    telegramVersion = '3.5'
+    telegramVersion = '5.6.0'
     telegramSprintBootVersion ='5.3.0'
     unirestJavaVersion = '1.4.9'
     jtelegramVersion = '4.0.1'
-    log4jVersion = '1.2.17'
     konghqVersion = '3.12.0'
-
+    webReactiveVersion = '2.6.2'
+    reactorVersion = '3.4.16'
+    telegramMetaVersion = '5.6.0'
+    reactorNettyVersion = '1.0.13'
+    nettiAllVersion = '5.0.0.Alpha2'
 }
 
 def defaultEncoding = 'UTF-8'
@@ -87,9 +90,7 @@ subprojects {
         appVendor = 'Digital League'
 
     }
-    configurations {
-        compile.exclude module: 'spring-boot-starter-logging'
-    }
+
     configurations {
         compileOnly {
             extendsFrom annotationProcessor
@@ -116,16 +117,15 @@ subprojects {
             dependency "org.slf4j:slf4j-api:$slf4jVersion"
             dependency "org.slf4j:log4j-over-slf4j:$slf4jVersion"
             dependency "org.slf4j:jcl-over-slf4j:$slf4jVersion"
-            dependency "org.slf4j:slf4j-log4j12:$slf4jVersion"
             dependency "ch.qos.logback:logback-core:$logbackVersion"
             dependency "ch.qos.logback:logback-classic:$logbackVersion"
 
             dependency "javax.servlet:javax.servlet-api:$javaxServletVersion"
             dependency "javax.persistence:javax.persistence-api:$javaxPersistenceVersion"
 
-//            dependency "org.springframework:spring-core:$springVersion"
-//            dependency "org.springframework:spring-context:$springVersion"
-//            dependency "org.springframework:spring-aspects:$springVersion"
+            dependency "org.springframework:spring-core:$springVersion"
+            dependency "org.springframework:spring-context:$springVersion"
+            dependency "org.springframework:spring-aspects:$springVersion"
             dependency "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion"
             dependency "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
             dependency "org.springframework.boot:spring-boot-starter-tomcat:$tomcatVersion"
@@ -180,18 +180,17 @@ subprojects {
             dependency "commons-io:commons-io:$commonsIoVersion"
 
             dependency "org.telegram:telegrambots:$telegramVersion"
-            dependency "org.telegram:telegrambots-spring-boot-starter:$springBootVersion"
+            dependency "org.telegram:telegrambots-spring-boot-starter:$telegramSprintBootVersion"
             dependency "com.mashape.unirest:unirest-java:$unirestJavaVersion"
 
             dependency "com.jtelegram:jtelegrambotapi-core:$jtelegramVersion"
-            dependency "log4j:log4j:$log4jVersion"
             dependency "com.konghq:unirest-java:$konghqVersion"
-            dependency ("org.apache.logging.log4j:log4j-core:2.17.1")
 
-
-
-
-
+            dependency "org.springframework.boot:spring-boot-starter-webflux:$webReactiveVersion"
+            dependency "io.projectreactor:reactor-core:$reactorVersion"
+            dependency "org.telegram:telegrambots-meta:$telegramMetaVersion"
+            dependency "io.projectreactor.netty:reactor-netty:$reactorNettyVersion"
+            dependency "io.netty:netty-all:$nettiAllVersion"
         }
     }
 }

@@ -1,10 +1,7 @@
 package ru.digitalleague.prerevolutionarytinder.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.digitalleague.prerevolutionarytinder.api.PersonService;
 import ru.digitalleague.prerevolutionarytinder.entity.Person;
 
@@ -15,7 +12,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PersonController {
 
-    //todo сделать exception handler под свои ошибки. Можно оринетрировать на fccr GlobalExceptionHandler
     private final PersonService personService;
 
     @GetMapping("/all")
@@ -33,14 +29,18 @@ public class PersonController {
         return personService.findByUserId(userId);
     }
 
-    @GetMapping("/search/persons/{userId}")
-    //todo find
-    public List<Person> searchPersonByUserId(@PathVariable String userId) {
-        return personService.searchPerson(userId);
+    @GetMapping("/find/suitable/persons/{userId}")
+    public List<Person> findSuitablePersonByUserId(@PathVariable String userId) {
+        return personService.findSuitablePerson(userId);
     }
 
     @GetMapping("/find/history/{userId}")
     public List<Person> findLikeHistoryByUserId(@PathVariable String userId) {
         return personService.findLikeHistory(userId);
+    }
+
+    @PostMapping("/save")
+    public Person savePerson(@RequestBody Person person) {
+        return personService.save(person);
     }
 }

@@ -54,7 +54,7 @@ public class DefaultPersonService implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Person> searchPerson(String userId) {
+    public List<Person> findSuitablePerson(String userId) {
         log.info("Get person by search term by userId: {}", userId);
         Person person = personRepository.findByUserId(userId);
         if (messageService.getMessage("tinder.gender.sir").equals(person.getSearchTerm())) {

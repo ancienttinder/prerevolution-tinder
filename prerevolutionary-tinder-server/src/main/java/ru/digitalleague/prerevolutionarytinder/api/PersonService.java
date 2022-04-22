@@ -12,7 +12,7 @@ public interface PersonService {
 
     Person save(Person person);
 
-    List<Person> searchPerson(String userId);
+    List<Person> findSuitablePerson(String userId);
 
     List<Person> findLikeHistory(String userId);
 }

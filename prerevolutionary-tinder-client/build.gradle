@@ -3,9 +3,7 @@ plugins {
 	id 'java'
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '1.8'
+group = 'ru.digitalleague'
 
 configurations {
 	compileOnly {
@@ -17,14 +15,21 @@ repositories {
 	mavenCentral()
 }
 
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'io.projectreactor.netty:reactor-netty'
+	implementation 'io.projectreactor:reactor-core'
+	implementation 'org.telegram:telegrambots-meta'
+	implementation 'org.telegram:telegrambots-spring-boot-starter'
+	compile 'org.modelmapper:modelmapper'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	compile 'org.telegram:telegrambots-spring-boot-starter'
 	compile 'org.telegram:telegrambots'
-	compile 'org.apache.logging.log4j:log4j-core'
-	compile 'log4j:log4j'
 }
