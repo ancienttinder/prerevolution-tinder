@@ -33,4 +33,7 @@ public class Person {
 
     @Column(name = "user_id")
     private String userId;
+
+    @Column(name = "bot_state")
+    private String botState;
 }

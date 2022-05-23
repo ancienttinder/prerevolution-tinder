@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface ChoiceRepository extends JpaRepository<Choice, Integer> {
 
-    Optional<Choice> findChoiceByPersonIdAndSelectedId(String personId, String selectedId);
+    Optional<Choice> findChoiceByPersonIdAndSelectedId(Integer personId, Integer selectedId);
 
 }

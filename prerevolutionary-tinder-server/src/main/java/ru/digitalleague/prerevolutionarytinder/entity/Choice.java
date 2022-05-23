@@ -22,8 +22,8 @@ public class Choice {
     private Integer id;
 
     @Column(name = "person_id")
-    private String personId;
+    private Integer personId;
 
     @Column(name = "selected_id")
-    private String selectedId;
+    private Integer selectedId;
 }

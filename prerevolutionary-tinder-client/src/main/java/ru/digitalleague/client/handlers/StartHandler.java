@@ -30,15 +30,18 @@ public class StartHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         SendMessage hello = createMessageTemplate(person);
-        String firstMessage = messageService.getMessage("message.hello");
-        if (message.equals(Callback.EDIT)) {
+        String firstMessage;
+        if (message.equals(Callback.EDIT.name())) {
             firstMessage = messageService.getMessage("message.edit.person");
+        } else {
+            firstMessage = messageService.getMessage("message.hello");
         }
         hello.setText(firstMessage);
         SendMessage enterNameMessage = createMessageTemplate(person);
         enterNameMessage.setText(messageService.getMessage("message.enter.name"));
         person.setBotState(BotState.ENTER_ONE_QUESTION);
-
+        restServerExchanger.save(person);
+        log.info("End Start Handler");
         return Arrays.asList(hello, enterNameMessage);
     }
 

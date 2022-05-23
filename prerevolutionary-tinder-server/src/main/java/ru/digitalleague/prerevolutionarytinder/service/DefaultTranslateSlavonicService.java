@@ -12,6 +12,8 @@ import org.apache.commons.lang3.StringUtils;
 @Component
 @RequiredArgsConstructor
 public class DefaultTranslateSlavonicService implements TranslateSlavonicService {
+    String VOWELS = "АЕЁИОУЫЭЮЯЙаеёиоуыэюяй";
+    String CONSTANTS = "БВГДЖЗКЛМНПРСТФХЦЧШЩбвгджзклмнпрстфхцчшщ";
 
     private final HashMap<String, String> replaceSlavonic = new HashMap<>();
 
@@ -415,6 +417,25 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
     public String translate(String rus) {
         final String[] keys = replaceSlavonic.keySet().toArray(new String[0]);
         final String[] values = replaceSlavonic.values().toArray(new String[0]);
-        return StringUtils.replaceEach(rus, keys, values);
+        return StringUtils.replaceEach(replaceIAndAddSolidMark(rus), keys, values);
+    }
+
+    private String replaceIAndAddSolidMark(String rus) {
+        String oldSlavonic = "";
+        char[] chRus = rus.toCharArray();
+        for (int i = 0; i < chRus.length; i++) {
+            if (chRus[i]=='и' && VOWELS.contains(String.valueOf(chRus[i+1]))){
+                oldSlavonic += 'i';
+            }
+            else {
+                oldSlavonic += chRus[i];
+            }
+            if (i == chRus.length - 1 || chRus[i + 1] == ' ' || chRus[i + 1] == '.' || chRus[i + 1] == ',') {
+                if (CONSTANTS.contains(String.valueOf(chRus[i]))) {
+                    oldSlavonic += 'ъ';
+                }
+            }
+        }
+        return oldSlavonic;
     }
 }

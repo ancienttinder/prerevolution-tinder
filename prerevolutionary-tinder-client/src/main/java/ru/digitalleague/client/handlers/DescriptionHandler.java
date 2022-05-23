@@ -33,17 +33,20 @@ public class DescriptionHandler implements Handler {
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
+        log.info("Start Description Handler");
         SendMessage sendMessage = createMessageTemplate(person);
         String messageText = messageService.getMessage("message.error");
         if (person.getBotState() == operatedBotState()) {
             person.setBotState(BotState.ENTER_FOUR_QUESTION);
             person.setDescription(message);
-            messageText = message + messageService.getMessage("message.enter.search.term");
+            messageText = person.getName() + ", " + messageService.getMessage("message.enter.search.term");
             List<Callback> callbacks = Arrays.asList(Callback.MADAM_SEARCH, Callback.SIR_SEARCH, Callback.ALL_SEARCH);
             InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
+            restServerExchanger.save(person);
         }
         sendMessage.setText(messageText);
+        log.info("End Description Handler");
         return Collections.singletonList(sendMessage);
     }
 

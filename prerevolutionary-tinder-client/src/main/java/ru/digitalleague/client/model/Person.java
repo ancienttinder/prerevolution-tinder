@@ -24,7 +24,6 @@ public class Person {
 
     private String userId;
 
-    @JsonIgnore
     private BotState botState;
 
 }

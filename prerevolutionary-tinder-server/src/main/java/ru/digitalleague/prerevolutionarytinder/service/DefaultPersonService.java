@@ -45,8 +45,12 @@ public class DefaultPersonService implements PersonService {
         if (oldPerson != null) {
             person.setId(oldPerson.getId());
         }
-        person.setName(translateSlavonicService.translate(person.getName()));
-        person.setDescription(translateSlavonicService.translate(person.getDescription()));
+        if (person.getName() != null) {
+            person.setName(translateSlavonicService.translate(person.getName()));
+        }
+        if (person.getDescription() != null) {
+            person.setDescription(translateSlavonicService.translate(person.getDescription()));
+        }
         personRepository.save(person);
         log.info("Successfully save person: {}", person);
         return person;

@@ -18,19 +18,20 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-freemarker'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-core:6.5.7'
     implementation 'org.apache.commons:commons-lang3'
     compile 'org.flywaydb:flyway-core:6.5.7'
     compile 'org.modelmapper:modelmapper'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.assertj:assertj-core")
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
 
 def dbDataDriver = ''
 def dbDataUrl = ''

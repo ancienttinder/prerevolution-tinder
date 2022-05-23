@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Choice {
 
-    private String personId;
+    private Integer personId;
 
-    private String selectedId;
+    private Integer selectedId;
 }

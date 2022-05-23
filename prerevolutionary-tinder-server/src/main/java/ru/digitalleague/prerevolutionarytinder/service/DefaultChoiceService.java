@@ -31,7 +31,7 @@ public class DefaultChoiceService implements ChoiceService {
     public void delete(Choice choice) {
         log.info("Delete choice: {}", choice);
         Optional<Choice> existingChoice = choiceRepository.findChoiceByPersonIdAndSelectedId(choice.getPersonId(), choice.getSelectedId());
-        if (!existingChoice.isPresent()) choiceRepository.deleteById(existingChoice.get().getId());
+        existingChoice.ifPresent(value -> choiceRepository.deleteById(value.getId()));
         log.info("Successfully delete choice: {}", choice);
     }
 

@@ -41,6 +41,7 @@ public class LikeHistoryHandler implements Handler {
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
+        log.info("Start Like History Handler");
         SendMessage sendMessage = createMessageTemplate(person);
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();
         messageList.add(sendMessage);
@@ -50,7 +51,6 @@ public class LikeHistoryHandler implements Handler {
             }
             if(likeHistory.isEmpty()) {
                 sendMessage.setText(messageService.getMessage("message.no.like.history"));
-                messageList.add(sendMessage);
                 return messageList;
             }
             handleCallback(message);
@@ -68,6 +68,7 @@ public class LikeHistoryHandler implements Handler {
             messageList.clear();
             messageList.add(sendPhoto);
         }
+        log.info("End Like History Handler");
         return messageList;
     }
 
@@ -94,6 +95,6 @@ public class LikeHistoryHandler implements Handler {
 
     @Override
     public List<String> operatedCallBackQuery() {
-        return Collections.singletonList(Callback.LIKE_HISTORY.name());
+        return Arrays.asList(Callback.LIKE_HISTORY.name(),Callback.PREVIOUS.name(),Callback.NEXT.name());
     }
 }

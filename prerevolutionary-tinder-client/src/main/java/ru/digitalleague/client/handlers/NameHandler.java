@@ -29,9 +29,11 @@ public class NameHandler implements Handler {
 
     private final MessageService messageService;
     private final FieldProvider fieldProvider;
+    private final RestServerExchanger restServerExchanger;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
+        log.info("Start Name Handler");
         SendMessage sendMessage = createMessageTemplate(person);
         String messageText = messageService.getMessage("message.error");
         if (person.getBotState().equals(BotState.ENTER_ONE_QUESTION)) {
@@ -40,9 +42,11 @@ public class NameHandler implements Handler {
             List<Callback> callbacks = Arrays.asList(Callback.MADAM, Callback.SIR);
             InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-            messageText = message + messageService.getMessage("message.enter.gender");
+            messageText = message + ", " + messageService.getMessage("message.enter.gender");
+            restServerExchanger.save(person);
         }
         sendMessage.setText(messageText);
+        log.info("End Name Handler");
         return Collections.singletonList(sendMessage);
     }
 
