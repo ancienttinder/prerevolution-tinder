@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "persons", schema = "tinder")
 @SequenceGenerator(schema = "tinder", name = "persons_s", sequenceName = "tinder.persons_s", allocationSize = 1)
-//todo почитать про то как сравниваются объекты, читать про hashcode, equals
 public class Person {
 
     @Id

@@ -1,13 +1,12 @@
 package ru.digitalleague.prerevolutionarytinder.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import ru.digitalleague.prerevolutionarytinder.api.TranslateSlavonicService;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
-
-import org.apache.commons.lang3.StringUtils;
 
 @Component
 @RequiredArgsConstructor
@@ -412,7 +411,6 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
         replaceSlavonic.put("цеп", "цѣп");
     }
 
-    //todo написать тест
     @Override
     public String translate(String rus) {
         final String[] keys = replaceSlavonic.keySet().toArray(new String[0]);
@@ -424,10 +422,9 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
         String oldSlavonic = "";
         char[] chRus = rus.toCharArray();
         for (int i = 0; i < chRus.length; i++) {
-            if (chRus[i]=='и' && VOWELS.contains(String.valueOf(chRus[i+1]))){
+            if (chRus[i] == 'и' && VOWELS.contains(String.valueOf(chRus[i + 1]))) {
                 oldSlavonic += 'i';
-            }
-            else {
+            } else {
                 oldSlavonic += chRus[i];
             }
             if (i == chRus.length - 1 || chRus[i + 1] == ' ' || chRus[i + 1] == '.' || chRus[i + 1] == ',') {

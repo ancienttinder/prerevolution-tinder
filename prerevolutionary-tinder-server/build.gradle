@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     compile 'org.flywaydb:flyway-core:6.5.7'
     compile 'org.modelmapper:modelmapper'
+    compile 'org.junit.jupiter:junit-jupiter'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
@@ -29,9 +30,9 @@ dependencies {
     testImplementation("org.assertj:assertj-core")
 }
 
-//tasks.named('test') {
-//    useJUnitPlatform()
-//}
+tasks.named('test') {
+    useJUnitPlatform()
+}
 
 def dbDataDriver = ''
 def dbDataUrl = ''

@@ -42,7 +42,7 @@ public class NameHandler implements Handler {
             List<Callback> callbacks = Arrays.asList(Callback.MADAM, Callback.SIR);
             InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
-            messageText = message + ", " + messageService.getMessage("message.enter.gender");
+            messageText = messageService.getMessage("message.enter.gender");
             restServerExchanger.save(person);
         }
         sendMessage.setText(messageText);

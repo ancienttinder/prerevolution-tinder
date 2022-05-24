@@ -15,13 +15,10 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "ps.SEARCH_TERM   as searchTerm, " +
             "ps.BOT_STATE     as botState, " +
             "ps.USER_ID       as userId " +
-            "from tinder.persons ps" +
-            "   join tinder.choices c on c.selected_id = ps.id " +
-            "   join tinder.persons p on p.id = c.person_id " +
+            "from tinder.persons p" +
+            "   join tinder.choices c on p.id = c.person_id " +
+            "   join tinder.persons ps on c.selected_id = ps.id " +
             "where p.USER_ID = ?1 ";
-
-    //"   join tinder.choices c on p.id = c.person_id " +
-    //        "   join tinder.persons ps on c.selected_id = ps.id " +
 
     String CHOICE_SELECTED_BY_USER_ID_QUERY = "select row_number() over () as id, " +
             "ps.gender        as gender, " +
@@ -43,6 +40,5 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
     @Query(value = CHOICE_SELECTED_BY_USER_ID_QUERY, nativeQuery = true)
     List<Person> findChoiceSelectedByUserId(String userId);
 
-    //List<Person> findPersonsBySearchTermAndGender(Collection<String> searchTerm, Collection<String> gender);
     List<Person> findPersonBySearchTermInAndGenderIn(Collection<String> searchTerm, Collection<String> gender);
 }

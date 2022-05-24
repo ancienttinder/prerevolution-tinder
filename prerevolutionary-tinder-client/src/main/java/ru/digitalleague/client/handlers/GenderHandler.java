@@ -37,7 +37,7 @@ public class GenderHandler implements Handler {
         if (person.getBotState() == BotState.ENTER_TWO_QUESTION) {
             person.setBotState(BotState.ENTER_THREE_QUESTION);
             person.setGender(fieldProvider.field(Callback.valueOf(message)));
-            messageText = person.getName() + ", " + messageService.getMessage("message.enter.description");
+            messageText = messageService.getMessage("message.enter.description");
             restServerExchanger.save(person);
         }
         sendMessage.setText(messageText);

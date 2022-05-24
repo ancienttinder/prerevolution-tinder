@@ -39,7 +39,7 @@ public class DescriptionHandler implements Handler {
         if (person.getBotState() == operatedBotState()) {
             person.setBotState(BotState.ENTER_FOUR_QUESTION);
             person.setDescription(message);
-            messageText = person.getName() + ", " + messageService.getMessage("message.enter.search.term");
+            messageText = messageService.getMessage("message.enter.search.term");
             List<Callback> callbacks = Arrays.asList(Callback.MADAM_SEARCH, Callback.SIR_SEARCH, Callback.ALL_SEARCH);
             InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
