@@ -45,14 +45,15 @@ public class LikeHistoryHandler implements Handler {
         SendMessage sendMessage = createMessageTemplate(person);
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();
         messageList.add(sendMessage);
-        if (person.getBotState() == BotState.MENU) {
-            if (likeHistory.isEmpty()) {
-                likeHistory = restServerExchanger.getLikeHistory(person.getUserId());
-            }
+        if (person.getBotState().equals(BotState.MENU)) {
+            likeHistory = restServerExchanger.getLikeHistory(person.getUserId());
             if(likeHistory.isEmpty()) {
                 sendMessage.setText(messageService.getMessage("message.no.like.history"));
                 return messageList;
             }
+            person.setBotState(BotState.LIKE_HISTORY);
+        }
+        if (person.getBotState().equals(BotState.LIKE_HISTORY)) {
             handleCallback(message);
             Person like = likeHistory.get(likeIndex);
             File imageFile = imageService.getImage(like.getDescription());
@@ -90,7 +91,7 @@ public class LikeHistoryHandler implements Handler {
 
     @Override
     public BotState operatedBotState() {
-        return BotState.MENU;
+        return null;
     }
 
     @Override

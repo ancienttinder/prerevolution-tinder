@@ -40,6 +40,7 @@ public class MenuHandler implements Handler {
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();
         SendMessage sendMessage = createMessageTemplate(person);
         messageList.add(sendMessage);
+        person.setBotState(BotState.MENU);
         File imageLocation = imageService.getImage(person.getDescription());
         if (imageLocation == null) {
             sendMessage.setText(messageService.getMessage("message.image.error"));

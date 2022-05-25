@@ -46,13 +46,14 @@ public class SuitableHandler implements Handler {
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();
         messageList.add(sendMessage);
         if (person.getBotState().equals(BotState.MENU)) {
-            if (suitablePersons.isEmpty()) {
-                suitablePersons = restServerExchanger.getSuitablePerson(person.getUserId());
-            }
+            suitablePersons = restServerExchanger.getSuitablePerson(person.getUserId());
             if(suitablePersons.isEmpty()) {
                 sendMessage.setText(messageService.getMessage("message.no.person.search.term"));
                 return messageList;
             }
+            person.setBotState(BotState.SEARCH);
+        }
+        if (person.getBotState().equals(BotState.SEARCH)) {
             handleCallback(person, message);
             Person like = suitablePersons.get(suitablePersonIndex);
             File imageFile = imageService.getImage(like.getDescription());
