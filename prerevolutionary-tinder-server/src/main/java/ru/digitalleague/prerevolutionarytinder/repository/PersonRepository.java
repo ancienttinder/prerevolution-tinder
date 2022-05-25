@@ -8,25 +8,13 @@ import java.util.Collection;
 import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
-    String CHOICE_PERSON_BY_USER_ID_QUERY = "select row_number() over () as id, " +
-            "ps.gender        as gender, " +
-            "ps.name          as name, " +
-            "ps.description   as description, " +
-            "ps.SEARCH_TERM   as searchTerm, " +
-            "ps.BOT_STATE     as botState, " +
-            "ps.USER_ID       as userId " +
+    String CHOICE_PERSON_BY_USER_ID_QUERY = "select ps.* " +
             "from tinder.persons p" +
             "   join tinder.choices c on p.id = c.person_id " +
             "   join tinder.persons ps on c.selected_id = ps.id " +
             "where p.USER_ID = ?1 ";
 
-    String CHOICE_SELECTED_BY_USER_ID_QUERY = "select row_number() over () as id, " +
-            "ps.gender        as gender, " +
-            "ps.name          as name, " +
-            "ps.description   as description, " +
-            "ps.SEARCH_TERM   as searchTerm, " +
-            "ps.bot_state     as botState, " +
-            "ps.USER_ID       as userId " +
+    String CHOICE_SELECTED_BY_USER_ID_QUERY = "select ps.* " +
             "from tinder.persons p" +
             "   join tinder.choices c on p.id = c.selected_id " +
             "   join tinder.persons ps on c.person_id = ps.id " +
