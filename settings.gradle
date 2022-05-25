@@ -1,3 +1,5 @@
 rootProject.name = 'prerevolution-tinder'
 
-include 'prerevolution-tinder-server'
+include 'prerevolutionary-tinder-server'
+include 'prerevolutionary-tinder-client'
+

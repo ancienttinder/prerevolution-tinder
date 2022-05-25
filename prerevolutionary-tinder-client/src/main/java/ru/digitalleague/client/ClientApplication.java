@@ -1,11 +1,13 @@
-package ru.digitalleague.prerevolutionarytinder;
+package ru.digitalleague.client;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PrerevolutionaryTinderApplication {
+public class ClientApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(PrerevolutionaryTinderApplication.class, args);
+        SpringApplication.run(ClientApplication.class, args);
     }
+
 }

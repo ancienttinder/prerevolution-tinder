@@ -1,7 +1,7 @@
 CREATE TABLE TINDER.CHOICES (
                                          ID INTEGER NOT NULL,
-                                         PERSON_ID VARCHAR(255),
-                                         SELECTED_ID VARCHAR(255),
+                                         PERSON_ID INTEGER,
+                                         SELECTED_ID INTEGER,
                                          PRIMARY KEY (ID)
 );
 CREATE UNIQUE INDEX I_CHOICES_ID ON TINDER.CHOICES (ID);
