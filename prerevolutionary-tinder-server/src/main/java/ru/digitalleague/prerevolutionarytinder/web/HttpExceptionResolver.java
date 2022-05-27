@@ -16,7 +16,7 @@ import java.text.MessageFormat;
 public abstract class HttpExceptionResolver {
 
     private MessageService messageService;
-
+    //todo protected конструктор
     public HttpExceptionResolver(@NonNull MessageService messageService) {
         this.messageService = messageService;
     }

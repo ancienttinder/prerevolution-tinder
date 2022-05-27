@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor //todo в методах класса много магических значений
 public class DefaultImageService implements ImageService {
 
     @Value("${file.path}")

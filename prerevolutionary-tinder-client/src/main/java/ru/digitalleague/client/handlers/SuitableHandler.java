@@ -32,6 +32,7 @@ import static ru.digitalleague.client.support.MessageCreator.createMessageTempla
 @Component
 @RequiredArgsConstructor
 public class SuitableHandler implements Handler {
+    //todo статичная нефинальная переменная
     private static int suitablePersonIndex = 0;
     private List<Person> suitablePersons = new ArrayList<>();
     private final MessageService messageService;
@@ -39,7 +40,7 @@ public class SuitableHandler implements Handler {
     private final ImageService imageService;
     private final FieldProvider fieldProvider;
 
-    @Override
+    @Override//todo логкиу создания сообщений вынести в отдельный сервис
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Suitable Handler");
         SendMessage sendMessage = createMessageTemplate(person);

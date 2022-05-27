@@ -43,7 +43,7 @@ public class DefaultRestServerExchanger implements RestServerExchanger {
         String url = "/persons/find/history/" + id;
         try {
             Person[] persons = restTemplate.getForEntity(url, Person[].class).getBody();
-            log.info("Get like history: {}",persons.toString());
+            log.info("Get like history: {}",persons.toString());//todo toString() можно не писать
             return Arrays.asList(persons);
         } catch (RestClientException e) {
             log.error("Error get data", e);
@@ -95,7 +95,7 @@ public class DefaultRestServerExchanger implements RestServerExchanger {
         String url = "/persons/find/suitable/persons/" + id;
         try {
             Person[] persons = restTemplate.getForEntity(url, Person[].class).getBody();
-            log.info("Get suitable person: {}",persons.toString());
+            log.info("Get suitable person: {}",persons.toString());//todo toString() можно не писать
             return Arrays.asList(persons);
         } catch (RestClientException e) {
             log.error("Error get data", e);

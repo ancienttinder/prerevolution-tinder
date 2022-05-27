@@ -36,10 +36,11 @@ public class LikeHistoryHandler implements Handler {
     private final ImageService imageService;
     private final RestServerExchanger restServerExchanger;
     private final FieldProvider fieldProvider;
+    // todo статичная не финальная переменная, некрасиво, ну и по идее будет работать корректно только если будет 1 юзер)
     private static int likeIndex = 0;
     private List<Person> likeHistory = new ArrayList<>();
 
-    @Override
+    @Override //todo логкиу создания сообщений вынести в отдельный сервис
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Like History Handler");
         SendMessage sendMessage = createMessageTemplate(person);

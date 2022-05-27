@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Builder
-@Data
+@Data//todo аннотацию Data, toString, EqualsAndHashCode нежелательно использовать в сущностях хибернейта
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

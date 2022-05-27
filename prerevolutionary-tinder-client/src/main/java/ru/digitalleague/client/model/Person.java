@@ -1,5 +1,5 @@
 package ru.digitalleague.client.model;
-
+//todo неиспользуемый импорт
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

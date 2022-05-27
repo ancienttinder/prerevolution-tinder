@@ -37,7 +37,7 @@ public class SearchTermHandler implements Handler {
     private final ImageService imageService;
     private final RestServerExchanger restServerExchanger;
 
-    @Override
+    @Override //todo логкиу создания сообщений вынести в отдельный сервис
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Search Term Handler");
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();

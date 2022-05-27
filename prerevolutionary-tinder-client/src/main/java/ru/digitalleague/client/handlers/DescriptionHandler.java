@@ -31,7 +31,7 @@ public class DescriptionHandler implements Handler {
     private final RestServerExchanger restServerExchanger;
     private final FieldProvider fieldProvider;
 
-    @Override
+    @Override//todo логкиу создания сообщений вынести в отдельный сервис
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Description Handler");
         SendMessage sendMessage = createMessageTemplate(person);

@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HandlerDespatcher {
+public class HandlerDespatcher { //todo Dispatcher
     private final List<Handler> handlers;
     private final IncorrectMessageHandler incorrectMessageHandler;
     private final RestServerExchanger restServerExchanger;
@@ -29,14 +29,15 @@ public class HandlerDespatcher {
                 final Message message = update.getMessage();
                 final long userId = message.getFrom().getId();
                 Person person = restServerExchanger.getPersonByUserId(String.valueOf(userId));
+                //todo в отдельный метод
                 if (person == null) {
                     person = new Person();
                     person.setUserId(String.valueOf(userId));
                     person.setBotState(BotState.START);
                     person = restServerExchanger.save(person);
-                    log.info("Create person: {}", person.toString());
+                    log.info("Create person: {}", person.toString()); //todo toString() можно не писать
                 }
-                log.info("Handler for:{}", person.toString());
+                log.info("Handler for:{}", person.toString()); //todo toString() можно не писать
                 return getHandlerByState(person.getBotState()).handle(person, message.getText());
             } else if (update.hasCallbackQuery()) {
                 final CallbackQuery callbackQuery = update.getCallbackQuery();

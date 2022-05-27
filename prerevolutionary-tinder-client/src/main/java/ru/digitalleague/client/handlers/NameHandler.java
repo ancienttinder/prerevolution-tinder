@@ -31,7 +31,7 @@ public class NameHandler implements Handler {
     private final FieldProvider fieldProvider;
     private final RestServerExchanger restServerExchanger;
 
-    @Override
+    @Override//todo логкиу создания сообщений вынести в отдельный сервис
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Name Handler");
         SendMessage sendMessage = createMessageTemplate(person);

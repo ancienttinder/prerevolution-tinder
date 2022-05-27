@@ -11,8 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+//todo приватный конструктор
 public class ButtonCreator {
+    //todo пустые строки
     public static InlineKeyboardMarkup create(List<Callback> buttons, FieldProvider fieldProvider) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -33,6 +34,7 @@ public class ButtonCreator {
         return inlineKeyboardButton;
     }
 
+    //todo не используется
     public static ReplyKeyboardMarkup createReplyKeyboardMarkup(List<Callback> callbacks, FieldProvider fieldProvider) {
 
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();

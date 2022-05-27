@@ -14,7 +14,7 @@ import static java.time.temporal.ChronoUnit.MILLIS;
 
 @Configuration
 @EnableConfigurationProperties
-public class RestTemplateConfig {
+public class  RestTemplateConfig {
     @Value("${route.server.url}")
     private String baseUrl;
 
