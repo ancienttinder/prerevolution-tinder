@@ -8,7 +8,8 @@ import java.util.Arrays;
 @Setter
 @Getter
 public class ErrorResponse {
-    private String level = "ERROR";//todo константа
+    private static final String ERROR_LEVEL = "ERROR";
+    private String level;
     private String message;
     private String[] stacktrace;
 
@@ -23,10 +24,10 @@ public class ErrorResponse {
     }
     //todo метод не используется
     public static ErrorResponse build(String message, Exception exception) {
-        return build(message, exception != null ? exception.getStackTrace() : null, "ERROR");//todo юзать константу
+        return build(message, exception != null ? exception.getStackTrace() : null, ERROR_LEVEL);
     }
 
     public static ErrorResponse build(String message) {
-        return build(message, null, "ERROR");
-    }//todo юзать константу
+        return build(message, null, ERROR_LEVEL);
+    }
 }

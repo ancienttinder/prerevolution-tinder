@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static ru.digitalleague.client.support.MessageCreator.createMessageTemplate;
@@ -32,8 +31,8 @@ import static ru.digitalleague.client.support.MessageCreator.createMessageTempla
 @Component
 @RequiredArgsConstructor
 public class SuitableHandler implements Handler {
-    //todo статичная нефинальная переменная
-    private static int suitablePersonIndex = 0;
+
+    private int suitablePersonIndex = 0;
     private List<Person> suitablePersons = new ArrayList<>();
     private final MessageService messageService;
     private final RestServerExchanger restServerExchanger;
@@ -48,7 +47,7 @@ public class SuitableHandler implements Handler {
         messageList.add(sendMessage);
         if (person.getBotState().equals(BotState.MENU)) {
             suitablePersons = restServerExchanger.getSuitablePerson(person.getUserId());
-            if(suitablePersons.isEmpty()) {
+            if (suitablePersons.isEmpty()) {
                 sendMessage.setText(messageService.getMessage("message.no.person.search.term"));
                 return messageList;
             }
@@ -77,17 +76,17 @@ public class SuitableHandler implements Handler {
     private void handleCallback(Person person, String message) {
         int maxIndex = suitablePersons.size();
         if (Callback.NEXT_PERSON.name().equals(message)) {
-            Choice choice = new Choice(person.getId(),suitablePersons.get(suitablePersonIndex).getId());
+            Choice choice = new Choice(person.getId(), suitablePersons.get(suitablePersonIndex).getId());
             restServerExchanger.saveChoice(choice);
             suitablePersonIndex++;
         }
         if (Callback.PREV_PERSON.name().equals(message)) {
-            Choice choice = new Choice(person.getId(),suitablePersons.get(suitablePersonIndex).getId());
+            Choice choice = new Choice(person.getId(), suitablePersons.get(suitablePersonIndex).getId());
             restServerExchanger.deleteChoice(choice);
             suitablePersonIndex++;
         }
         if (suitablePersonIndex == maxIndex) {
-            suitablePersonIndex =0;
+            suitablePersonIndex = 0;
         }
         if (suitablePersonIndex == -1) {
             suitablePersonIndex = maxIndex - 1;
@@ -101,6 +100,6 @@ public class SuitableHandler implements Handler {
 
     @Override
     public List<String> operatedCallBackQuery() {
-        return Arrays.asList(Callback.FIND_SUITABLE_PERSON.name(),Callback.NEXT_PERSON.name(),Callback.PREV_PERSON.name());
+        return Arrays.asList(Callback.FIND_SUITABLE_PERSON.name(), Callback.NEXT_PERSON.name(), Callback.PREV_PERSON.name());
     }
 }

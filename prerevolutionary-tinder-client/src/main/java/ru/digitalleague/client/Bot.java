@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.digitalleague.client.handlers.HandlerDespatcher;
+import ru.digitalleague.client.handlers.HandlerDispatcher;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,11 +26,11 @@ public class Bot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String botToken;
 
-    private final HandlerDespatcher handlerDespatcher;
+    private final HandlerDispatcher handlerDispatcher;
 
     public void onUpdateReceived(Update update) {
         log.info("New Update");
-        List<PartialBotApiMethod<? extends Serializable>> messagesToSend = handlerDespatcher.handle(update);
+        List<PartialBotApiMethod<? extends Serializable>> messagesToSend = handlerDispatcher.handle(update);
         if (messagesToSend != null && !messagesToSend.isEmpty()) {
             messagesToSend.forEach(response -> {
                 if (response instanceof SendMessage) {

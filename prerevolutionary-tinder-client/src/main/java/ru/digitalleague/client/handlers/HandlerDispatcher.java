@@ -18,7 +18,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class HandlerDespatcher { //todo Dispatcher
+public class HandlerDispatcher {
     private final List<Handler> handlers;
     private final IncorrectMessageHandler incorrectMessageHandler;
     private final RestServerExchanger restServerExchanger;
@@ -28,16 +28,8 @@ public class HandlerDespatcher { //todo Dispatcher
             if (isMessageWithText(update)) {
                 final Message message = update.getMessage();
                 final long userId = message.getFrom().getId();
-                Person person = restServerExchanger.getPersonByUserId(String.valueOf(userId));
-                //todo в отдельный метод
-                if (person == null) {
-                    person = new Person();
-                    person.setUserId(String.valueOf(userId));
-                    person.setBotState(BotState.START);
-                    person = restServerExchanger.save(person);
-                    log.info("Create person: {}", person.toString()); //todo toString() можно не писать
-                }
-                log.info("Handler for:{}", person.toString()); //todo toString() можно не писать
+                Person person = getPerson(userId);
+                log.info("Handler for:{}", person);
                 return getHandlerByState(person.getBotState()).handle(person, message.getText());
             } else if (update.hasCallbackQuery()) {
                 final CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -71,5 +63,17 @@ public class HandlerDespatcher { //todo Dispatcher
 
     private boolean isMessageWithText(Update update) {
         return !update.hasCallbackQuery() && update.hasMessage() && update.getMessage().hasText();
+    }
+
+    private Person getPerson(long userId) {
+        Person person = restServerExchanger.getPersonByUserId(String.valueOf(userId));
+        if (person == null) {
+            person = new Person();
+            person.setUserId(String.valueOf(userId));
+            person.setBotState(BotState.START);
+            person = restServerExchanger.save(person);
+            log.info("Create person: {}", person);
+        }
+        return person;
     }
 }

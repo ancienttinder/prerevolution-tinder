@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static ru.digitalleague.client.support.MessageCreator.createMessageTemplate;
@@ -36,8 +35,7 @@ public class LikeHistoryHandler implements Handler {
     private final ImageService imageService;
     private final RestServerExchanger restServerExchanger;
     private final FieldProvider fieldProvider;
-    // todo статичная не финальная переменная, некрасиво, ну и по идее будет работать корректно только если будет 1 юзер)
-    private static int likeIndex = 0;
+    private int likeIndex = 0;
     private List<Person> likeHistory = new ArrayList<>();
 
     @Override //todo логкиу создания сообщений вынести в отдельный сервис
@@ -48,7 +46,7 @@ public class LikeHistoryHandler implements Handler {
         messageList.add(sendMessage);
         if (person.getBotState().equals(BotState.MENU)) {
             likeHistory = restServerExchanger.getLikeHistory(person.getUserId());
-            if(likeHistory.isEmpty()) {
+            if (likeHistory.isEmpty()) {
                 sendMessage.setText(messageService.getMessage("message.no.like.history"));
                 return messageList;
             }
@@ -83,7 +81,7 @@ public class LikeHistoryHandler implements Handler {
             likeIndex--;
         }
         if (likeIndex == maxIndex) {
-            likeIndex =0;
+            likeIndex = 0;
         }
         if (likeIndex == -1) {
             likeIndex = maxIndex - 1;
@@ -97,6 +95,6 @@ public class LikeHistoryHandler implements Handler {
 
     @Override
     public List<String> operatedCallBackQuery() {
-        return Arrays.asList(Callback.LIKE_HISTORY.name(),Callback.PREVIOUS.name(),Callback.NEXT.name());
+        return Arrays.asList(Callback.LIKE_HISTORY.name(), Callback.PREVIOUS.name(), Callback.NEXT.name());
     }
 }

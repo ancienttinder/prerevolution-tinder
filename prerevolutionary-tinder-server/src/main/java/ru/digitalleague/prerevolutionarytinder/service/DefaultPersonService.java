@@ -101,7 +101,6 @@ public class DefaultPersonService implements PersonService {
     }
 
     private void addMutualityToName(List<Person> persons, String textToAdd) {
-        persons.stream()//todo можно убрать stream()
-                .forEach(person -> person.setName(person.getName() + ", " + textToAdd));
+        persons.forEach(person -> person.setName(person.getName() + ", " + textToAdd));
     }
 }

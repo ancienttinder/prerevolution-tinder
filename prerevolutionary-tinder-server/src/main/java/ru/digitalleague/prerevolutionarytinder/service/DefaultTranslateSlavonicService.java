@@ -422,7 +422,7 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
         String oldSlavonic = "";
         char[] chRus = rus.toCharArray();
         for (int i = 0; i < chRus.length; i++) {
-            if (chRus[i] == 'и' && VOWELS.contains(String.valueOf(chRus[i + 1]))) {
+            if (chRus[i] == 'и' && i < (chRus.length - 1) && VOWELS.contains(String.valueOf(chRus[i + 1]))) {
                 oldSlavonic += 'i';
             } else {
                 oldSlavonic += chRus[i];

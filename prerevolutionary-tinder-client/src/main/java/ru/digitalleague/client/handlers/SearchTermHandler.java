@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static ru.digitalleague.client.support.MessageCreator.createMessageTemplate;
@@ -53,9 +52,9 @@ public class SearchTermHandler implements Handler {
                 messageList.add(sendMessage);
                 return messageList;
             }
-            SendPhoto sendPhoto = new SendPhoto(person.getUserId(),new InputFile(imageLocation));
+            SendPhoto sendPhoto = new SendPhoto(person.getUserId(), new InputFile(imageLocation));
             sendPhoto.setCaption(person.getGender() + ", " + person.getName());
-            List<Callback> callbacks = Arrays.asList(Callback.EDIT, Callback.FIND_SUITABLE_PERSON,Callback.LIKE_HISTORY);
+            List<Callback> callbacks = Arrays.asList(Callback.EDIT, Callback.FIND_SUITABLE_PERSON, Callback.LIKE_HISTORY);
             InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
             sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
             messageList.clear();

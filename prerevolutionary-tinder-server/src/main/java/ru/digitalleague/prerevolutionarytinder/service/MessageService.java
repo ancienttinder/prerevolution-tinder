@@ -10,7 +10,7 @@ import java.util.Locale;
 @Slf4j
 @RequiredArgsConstructor
 public class MessageService {
-    public static Locale russian = new Locale("ru", "RU"); //todo final
+    public static final Locale russian = new Locale("ru", "RU");
 
     private final ResourceBundleMessageSource messageSource;
 

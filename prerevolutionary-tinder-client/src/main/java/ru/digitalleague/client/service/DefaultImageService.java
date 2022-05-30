@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor //todo в методах класса много магических значений
+@RequiredArgsConstructor
 public class DefaultImageService implements ImageService {
 
     @Value("${file.path}")
@@ -32,6 +32,10 @@ public class DefaultImageService implements ImageService {
     public static final int MAX_BODY_FONT_SIZE = 45;
     public static final int SYMBOLS_COUNT_IN_FONTSIZE_STEP = 10;
     public static final int MAX_HEADER_FONT_SIZE = 60;
+    public static final int HEADER_X = 75;
+    public static final int HEADER_Y = 100;
+    public static final int DRAW_HEADER_Y = 150;
+    public static final double HEADER_Y_STEP = 1.2;
 
     private BufferedImage bufferedImage;
 
@@ -47,7 +51,7 @@ public class DefaultImageService implements ImageService {
             Graphics g = bufferedImage.createGraphics();
             g.setColor(Color.BLACK);
             g.setFont(headerFont);
-            g.drawString(header, 75, 100);
+            g.drawString(header, HEADER_X, HEADER_Y);
             g.dispose();
             if (header.length() < description.length()) {
                 String body = description.replaceFirst(header, "");
@@ -73,7 +77,7 @@ public class DefaultImageService implements ImageService {
 
         log.debug("Draw body description");
         int symbolsInLine = BACKGROUND_WIDTH / bodyFontSize * 2;
-        int headerY = 150 + bodyFontSize;
+        int headerY = DRAW_HEADER_Y + bodyFontSize;
         StringBuilder line = new StringBuilder();
         for (String word : bodyWords) {
             if (line.length() + word.length() < symbolsInLine) {
@@ -83,8 +87,8 @@ public class DefaultImageService implements ImageService {
                 g = bufferedImage.getGraphics();
                 g.setFont(descriptionFont);
                 g.setColor(Color.DARK_GRAY);
-                g.drawString(line.toString(), 75, headerY);
-                headerY += bodyFontSize * 1.2;
+                g.drawString(line.toString(), HEADER_X, headerY);
+                headerY += bodyFontSize * HEADER_Y_STEP;
                 g.dispose();
                 line.delete(0, line.length());
                 line.append(word).append(" ");
@@ -94,7 +98,7 @@ public class DefaultImageService implements ImageService {
             g = bufferedImage.getGraphics();
             g.setFont(descriptionFont);
             g.setColor(Color.DARK_GRAY);
-            g.drawString(line.toString(), 75, headerY);
+            g.drawString(line.toString(), HEADER_X, headerY);
             g.dispose();
         }
     }
