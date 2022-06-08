@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface Handler {
     List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message);
+
     BotState operatedBotState();
+
     List<String> operatedCallBackQuery();
 }

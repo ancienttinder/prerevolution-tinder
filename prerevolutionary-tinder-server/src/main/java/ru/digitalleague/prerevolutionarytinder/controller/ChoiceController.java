@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.digitalleague.prerevolutionarytinder.api.ChoiceService;
-import ru.digitalleague.prerevolutionarytinder.entity.Choice;
+import ru.digitalleague.prerevolutionarytinder.model.ChoiceView;
 
 @RestController
 @RequestMapping("/choices")
@@ -16,12 +16,12 @@ public class ChoiceController {
     private final ChoiceService choiceService;
 
     @PostMapping("/save")
-    public void saveChoice(@RequestBody Choice choice) {
-        choiceService.save(choice);
+    public void saveChoice(@RequestBody ChoiceView choiceView) {
+        choiceService.save(choiceView);
     }
 
     @PostMapping("/delete")
-    public void deleteChoice(@RequestBody Choice choice) {
-        choiceService.delete(choice);
+    public void deleteChoice(@RequestBody ChoiceView choiceView) {
+        choiceService.delete(choiceView);
     }
 }

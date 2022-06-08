@@ -5,12 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.digitalleague.prerevolutionarytinder.api.PersonService;
-import ru.digitalleague.prerevolutionarytinder.api.TranslateSlavonicService;
+import ru.digitalleague.prerevolutionarytinder.builder.NewspaperPersonBuilder;
+import ru.digitalleague.prerevolutionarytinder.builder.PersonBuilder;
 import ru.digitalleague.prerevolutionarytinder.entity.Person;
+import ru.digitalleague.prerevolutionarytinder.mapper.PersonMapper;
+import ru.digitalleague.prerevolutionarytinder.model.NewspaperPersonView;
+import ru.digitalleague.prerevolutionarytinder.model.PersonView;
 import ru.digitalleague.prerevolutionarytinder.repository.PersonRepository;
+import ru.digitalleague.prerevolutionarytinder.type.Gender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +26,10 @@ import java.util.stream.Collectors;
 public class DefaultPersonService implements PersonService {
 
     private final PersonRepository personRepository;
-    private final TranslateSlavonicService translateSlavonicService;
     private final MessageService messageService;
+    private final NewspaperPersonBuilder newspaperPersonBuilder;
+    private final PersonMapper personMapper;
+    private final PersonBuilder personBuilder;
 
     @Override
     @Transactional(readOnly = true)
@@ -32,75 +40,93 @@ public class DefaultPersonService implements PersonService {
 
     @Override
     @Transactional(readOnly = true)
-    public Person findByUserId(String userId) {
+    public PersonView findByUserId(String userId) {
         log.info("Get person by userId: {}", userId);
-        return personRepository.findByUserId(userId);
-    }
-
-    @Override
-    @Transactional
-    public Person save(Person person) {
-        log.info("Save person: {}", person);
-        Person oldPerson = personRepository.findByUserId(person.getUserId());
-        if (oldPerson != null) {
-            person.setId(oldPerson.getId());
-        }
-        if (person.getName() != null) {
-            person.setName(translateSlavonicService.translate(person.getName()));
-        }
-        if (person.getDescription() != null) {
-            person.setDescription(translateSlavonicService.translate(person.getDescription()));
-        }
-        personRepository.save(person);
-        log.info("Successfully save person: {}", person);
-        return person;
+        return personMapper.toView(personRepository.findPersonByUserId(userId));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Person> findSuitablePerson(String userId) {
-        log.info("Get person by search term by userId: {}", userId);
-        Person person = personRepository.findByUserId(userId);
-        if (messageService.getMessage("tinder.gender.sir").equals(person.getSearchTerm())) {
-            return personRepository.findPersonBySearchTermInAndGenderIn(
-                    Arrays.asList(person.getGender(), messageService.getMessage("tinder.gender.all")),
-                    Arrays.asList(messageService.getMessage("tinder.gender.sir")));
-        } else if (messageService.getMessage("tinder.gender.madam").equals(person.getSearchTerm())) {
-            return personRepository.findPersonBySearchTermInAndGenderIn(
-                    Arrays.asList(person.getGender(), messageService.getMessage("tinder.gender.all")),
-                    Arrays.asList(messageService.getMessage("tinder.gender.madam")));
-        } else if (messageService.getMessage("tinder.gender.all").equals(person.getSearchTerm())) {
-            return personRepository.findPersonBySearchTermInAndGenderIn(
-                    Arrays.asList(person.getGender(), messageService.getMessage("tinder.gender.all")),
-                    Arrays.asList(messageService.getMessage("tinder.gender.sir"), messageService.getMessage("tinder.gender.madam")));
-        }
-        return null;
+    public NewspaperPersonView findPhotoByUserId(String userId) {
+        log.info("Get person by userId: {}", userId);
+        Person person = personRepository.findPersonByUserId(userId);
+        return newspaperPersonBuilder.build(person);
     }
 
     @Override
-    public List<Person> findLikeHistory(String userId) {
+    @Transactional
+    public PersonView save(PersonView person) {
+        log.info("Save person: {}", person);
+        Person oldPerson = personRepository.findPersonByUserId(person.getUserId());
+        Person newPerson = personBuilder.build(person, oldPerson);
+        personRepository.save(newPerson);
+        log.info("Successfully save person: {}", newPerson);
+        return personMapper.toView(newPerson);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<NewspaperPersonView> findPhotoSuitablePerson(String userId) {
+        log.info("Get person by search term by userId: {}", userId);
+        Person person = personRepository.findPersonByUserId(userId);
+        List<Person> suitablePersons = getSuitablePerson(person);
+        return suitablePersons.stream()
+                .map(newspaperPersonBuilder::build)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<NewspaperPersonView> findPhotoLikeHistory(String userId) {
         log.info("Get like history by userId: {}", userId);
         List<Person> personLikeToSome = personRepository.findChoicePersonByUserId(userId);
         List<Person> someLikeToPerson = personRepository.findChoiceSelectedByUserId(userId);
+        List<Person> likeHistory = getLikeHistory(personLikeToSome, someLikeToPerson);
+        return likeHistory.stream()
+                .map(newspaperPersonBuilder::build)
+                .collect(Collectors.toList());
+    }
 
+    private void addMutualityToName(List<Person> persons, String textToAdd) {
+        persons.forEach(person -> person.setName(person.getName() + ", " + textToAdd));
+    }
+
+    private List<Person> getSuitablePerson(Person person) {
+        if (Gender.SIR.equals(Gender.valueOf(person.getSearchTerm()))) {
+            return personRepository.findPersonBySearchTermInAndGenderIn(
+                    Arrays.asList(person.getGender(), Gender.ALL.toString()),
+                    Collections.singletonList(Gender.SIR.toString()));
+        } else if (Gender.MADAM.equals(Gender.valueOf(person.getSearchTerm()))) {
+            return personRepository.findPersonBySearchTermInAndGenderIn(
+                    Arrays.asList(person.getGender(), Gender.ALL.toString()),
+                    Collections.singletonList(Gender.MADAM.toString()));
+        } else if (Gender.ALL.equals(Gender.valueOf(person.getSearchTerm()))) {
+            return personRepository.findPersonBySearchTermInAndGenderIn(
+                    Arrays.asList(person.getGender(), Gender.ALL.toString()),
+                    Arrays.asList(Gender.SIR.toString(), Gender.MADAM.toString()));
+        }
+        return Collections.emptyList();
+    }
+
+    private List<Person> getLikeHistory(List<Person> personLikeToSome, List<Person> someLikeToPerson) {
         List<Person> mutualityLikes = personLikeToSome.stream()
                 .filter(someLikeToPerson::contains)
                 .collect(Collectors.toList());
         personLikeToSome.removeAll(mutualityLikes);
         someLikeToPerson.removeAll(mutualityLikes);
 
-        addMutualityToName(personLikeToSome, messageService.getMessage("tinder.type.mutuality.likeyou"));
-        addMutualityToName(someLikeToPerson, messageService.getMessage("tinder.type.mutuality.youliked"));
-        addMutualityToName(mutualityLikes, messageService.getMessage("tinder.type.mutuality.both"));
+        addMutualityToName(personLikeToSome,
+                messageService.getMessage("tinder.type.mutuality.likeyou"));
+        addMutualityToName(someLikeToPerson,
+                messageService.getMessage("tinder.type.mutuality.youliked"));
+        addMutualityToName(mutualityLikes,
+                messageService.getMessage("tinder.type.mutuality.both"));
 
         List<Person> likeHistory = new ArrayList<>();
         likeHistory.addAll(personLikeToSome);
         likeHistory.addAll(someLikeToPerson);
         likeHistory.addAll(mutualityLikes);
-        return likeHistory;
-    }
 
-    private void addMutualityToName(List<Person> persons, String textToAdd) {
-        persons.forEach(person -> person.setName(person.getName() + ", " + textToAdd));
+        return likeHistory;
     }
 }

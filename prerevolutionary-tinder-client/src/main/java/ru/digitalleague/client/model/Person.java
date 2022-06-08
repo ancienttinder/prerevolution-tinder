@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.digitalleague.client.type.BotState;
+import ru.digitalleague.client.type.Gender;
 
 @Data
 @Builder
@@ -13,16 +14,15 @@ import ru.digitalleague.client.type.BotState;
 public class Person {
     private Integer id;
 
-    private String gender;
+    private Gender gender;
 
     private String name;
 
     private String description;
 
-    private String searchTerm;
+    private Gender searchTerm;
 
     private String userId;
 
     private BotState botState;
-
 }

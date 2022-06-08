@@ -6,6 +6,7 @@ CREATE TABLE TINDER.PERSONS (
                                          SEARCH_TERM VARCHAR(10),
                                          USER_ID VARCHAR(10),
                                          BOT_STATE VARCHAR(30),
+                                         IMAGE_PATH VARCHAR(225),
                                          PRIMARY KEY (ID)
 );
 CREATE UNIQUE INDEX I_PERSONS_ID ON TINDER.PERSONS (ID);

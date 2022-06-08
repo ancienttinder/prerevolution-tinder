@@ -1,6 +1,5 @@
 package ru.digitalleague.prerevolutionarytinder.service;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -21,14 +20,5 @@ public class MessageService {
             log.warn("Get message key='" + code + "' error:" + e.getMessage());
         }
         return code;
-    }
-
-    public String getMessage(String code, Object... args) {
-        return messageSource.getMessage(code, args, russian);
-    }
-
-    public String getMessage(@NonNull Enum a) {
-        String className = a.getClass().getName();
-        return getMessage(className + "." + a.toString());
     }
 }

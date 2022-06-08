@@ -6,17 +6,15 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.digitalleague.client.api.FieldProvider;
 import ru.digitalleague.client.api.Handler;
-import ru.digitalleague.client.api.ImageService;
 import ru.digitalleague.client.api.RestServerExchanger;
+import ru.digitalleague.client.model.NewspaperPerson;
 import ru.digitalleague.client.model.Person;
 import ru.digitalleague.client.service.MessageService;
-import ru.digitalleague.client.support.ButtonCreator;
+import ru.digitalleague.client.support.MessageCreator;
 import ru.digitalleague.client.type.BotState;
 import ru.digitalleague.client.type.Callback;
+import ru.digitalleague.client.type.Gender;
 
 import java.io.File;
 import java.io.Serializable;
@@ -32,31 +30,26 @@ import static ru.digitalleague.client.support.MessageCreator.createMessageTempla
 public class SearchTermHandler implements Handler {
 
     private final MessageService messageService;
-    private final FieldProvider fieldProvider;
-    private final ImageService imageService;
     private final RestServerExchanger restServerExchanger;
+    private final MessageCreator messageCreator;
 
-    @Override //todo логкиу создания сообщений вынести в отдельный сервис
+    @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Search Term Handler");
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();
         SendMessage sendMessage = createMessageTemplate(person);
         messageList.add(sendMessage);
         if (person.getBotState().equals(BotState.ENTER_FOUR_QUESTION)) {
-            person.setBotState(BotState.MENU);
-            person.setSearchTerm(fieldProvider.field(Callback.valueOf(message)));
+            person = new Person(person.getId(), person.getGender(), person.getName(), person.getDescription(), Gender.getFromSearchTerm(Callback.valueOf(message)), person.getUserId(), BotState.MENU);
             person = restServerExchanger.save(person);
-            File imageLocation = imageService.getImage(person.getDescription());
+            NewspaperPerson newspaperPerson = restServerExchanger.getPhotoPersonByUserId(person.getUserId());
+            File imageLocation = newspaperPerson.getNewspaperImage();
             if (imageLocation == null) {
                 sendMessage.setText(messageService.getMessage("message.image.error"));
                 messageList.add(sendMessage);
                 return messageList;
             }
-            SendPhoto sendPhoto = new SendPhoto(person.getUserId(), new InputFile(imageLocation));
-            sendPhoto.setCaption(person.getGender() + ", " + person.getName());
-            List<Callback> callbacks = Arrays.asList(Callback.EDIT, Callback.FIND_SUITABLE_PERSON, Callback.LIKE_HISTORY);
-            InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
-            sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+            SendPhoto sendPhoto = messageCreator.getPhotoMessage(person, newspaperPerson, Arrays.asList(Callback.EDIT, Callback.FIND_SUITABLE_PERSON, Callback.LIKE_HISTORY));
             messageList.clear();
             messageList.add(sendPhoto);
         }

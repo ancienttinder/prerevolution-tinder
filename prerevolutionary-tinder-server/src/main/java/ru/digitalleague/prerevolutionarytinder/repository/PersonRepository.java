@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 
 public interface PersonRepository extends JpaRepository<Person, Integer> {
-    //todo не уверен, но вроде как нативные запросы не защищают от инжекшена, почему бы не заюзать hql?
     String CHOICE_PERSON_BY_USER_ID_QUERY = "select ps.* " +
             "from tinder.persons p" +
             "   join tinder.choices c on p.id = c.person_id " +
@@ -21,7 +20,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "   join tinder.persons ps on c.person_id = ps.id " +
             "where p.USER_ID = ?1 ";
 
-    Person findByUserId(String userId);
+    Person findPersonByUserId(String userId);
 
     @Query(value = CHOICE_PERSON_BY_USER_ID_QUERY, nativeQuery = true)
     List<Person> findChoicePersonByUserId(String userId);

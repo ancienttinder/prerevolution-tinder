@@ -58,9 +58,7 @@ public class Bot extends TelegramLongPollingBot {
             log.info(sendMessage.getText());
             execute(sendMessage);
         } catch (TelegramApiException e) {
-
-            log.error(e.getMessage());
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -69,7 +67,7 @@ public class Bot extends TelegramLongPollingBot {
             log.info(sendMessage.getPhoto().getMediaName());
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
     }
 

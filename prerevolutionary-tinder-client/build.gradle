@@ -26,6 +26,7 @@ dependencies {
 	implementation 'io.projectreactor:reactor-core'
 	implementation 'org.telegram:telegrambots-meta'
 	implementation 'org.telegram:telegrambots-spring-boot-starter'
+	implementation 'io.vavr:vavr'
 	compile 'org.modelmapper:modelmapper'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

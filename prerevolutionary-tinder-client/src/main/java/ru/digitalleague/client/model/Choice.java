@@ -10,8 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Choice {
+    private Long personId;
 
-    private Integer personId;
-
-    private Integer selectedId;
+    private Long selectedId;
 }

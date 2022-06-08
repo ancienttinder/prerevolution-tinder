@@ -6,16 +6,14 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.digitalleague.client.api.FieldProvider;
 import ru.digitalleague.client.api.Handler;
-import ru.digitalleague.client.api.ImageService;
 import ru.digitalleague.client.api.RestServerExchanger;
+import ru.digitalleague.client.builder.PersonBuilder;
 import ru.digitalleague.client.model.Choice;
+import ru.digitalleague.client.model.NewspaperPerson;
 import ru.digitalleague.client.model.Person;
 import ru.digitalleague.client.service.MessageService;
-import ru.digitalleague.client.support.ButtonCreator;
+import ru.digitalleague.client.support.MessageCreator;
 import ru.digitalleague.client.type.BotState;
 import ru.digitalleague.client.type.Callback;
 
@@ -33,13 +31,13 @@ import static ru.digitalleague.client.support.MessageCreator.createMessageTempla
 public class SuitableHandler implements Handler {
 
     private int suitablePersonIndex = 0;
-    private List<Person> suitablePersons = new ArrayList<>();
+    private List<NewspaperPerson> suitablePersons = new ArrayList<>();
     private final MessageService messageService;
     private final RestServerExchanger restServerExchanger;
-    private final ImageService imageService;
-    private final FieldProvider fieldProvider;
+    private final PersonBuilder personBuilder;
+    private final MessageCreator messageCreator;
 
-    @Override//todo логкиу создания сообщений вынести в отдельный сервис
+    @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
         log.info("Start Suitable Handler");
         SendMessage sendMessage = createMessageTemplate(person);
@@ -47,25 +45,23 @@ public class SuitableHandler implements Handler {
         messageList.add(sendMessage);
         if (person.getBotState().equals(BotState.MENU)) {
             suitablePersons = restServerExchanger.getSuitablePerson(person.getUserId());
+            suitablePersonIndex = 0;
             if (suitablePersons.isEmpty()) {
                 sendMessage.setText(messageService.getMessage("message.no.person.search.term"));
                 return messageList;
             }
-            person.setBotState(BotState.SEARCH);
+            person = personBuilder.build(person, BotState.SEARCH);
+            restServerExchanger.save(person);
         }
         if (person.getBotState().equals(BotState.SEARCH)) {
             handleCallback(person, message);
-            Person like = suitablePersons.get(suitablePersonIndex);
-            File imageFile = imageService.getImage(like.getDescription());
-            SendPhoto sendPhoto = new SendPhoto(person.getUserId(), new InputFile(imageFile));
+            NewspaperPerson newspaperPerson = suitablePersons.get(suitablePersonIndex);
+            File imageFile = newspaperPerson.getNewspaperImage();
             if (imageFile == null) {
                 sendMessage.setText(messageService.getMessage("message.image.error"));
                 return messageList;
             }
-            sendPhoto.setCaption(like.getGender() + ", " + like.getName());
-            List<Callback> callbacks = Arrays.asList(Callback.PREV_PERSON, Callback.MENU, Callback.NEXT_PERSON);
-            InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
-            sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+            SendPhoto sendPhoto = messageCreator.getPhotoMessage(person, newspaperPerson, Arrays.asList(Callback.PREV_PERSON, Callback.MENU, Callback.NEXT_PERSON));
             messageList.clear();
             messageList.add(sendPhoto);
         }
@@ -76,12 +72,12 @@ public class SuitableHandler implements Handler {
     private void handleCallback(Person person, String message) {
         int maxIndex = suitablePersons.size();
         if (Callback.NEXT_PERSON.name().equals(message)) {
-            Choice choice = new Choice(person.getId(), suitablePersons.get(suitablePersonIndex).getId());
+            Choice choice = new Choice((long) person.getId(), suitablePersons.get(suitablePersonIndex).getPersonId());
             restServerExchanger.saveChoice(choice);
             suitablePersonIndex++;
         }
         if (Callback.PREV_PERSON.name().equals(message)) {
-            Choice choice = new Choice(person.getId(), suitablePersons.get(suitablePersonIndex).getId());
+            Choice choice = new Choice((long) person.getId(), suitablePersons.get(suitablePersonIndex).getPersonId());
             restServerExchanger.deleteChoice(choice);
             suitablePersonIndex++;
         }

@@ -1,6 +1,8 @@
 package ru.digitalleague.prerevolutionarytinder.api;
 
 import ru.digitalleague.prerevolutionarytinder.entity.Person;
+import ru.digitalleague.prerevolutionarytinder.model.NewspaperPersonView;
+import ru.digitalleague.prerevolutionarytinder.model.PersonView;
 
 import java.util.List;
 
@@ -8,11 +10,13 @@ public interface PersonService {
 
     List<Person> findAll();
 
-    Person findByUserId(String userId);
+    PersonView findByUserId(String userId);
 
-    Person save(Person person);
+    NewspaperPersonView findPhotoByUserId(String userId);
 
-    List<Person> findSuitablePerson(String userId);
+    PersonView save(PersonView person);
 
-    List<Person> findLikeHistory(String userId);
+    List<NewspaperPersonView> findPhotoSuitablePerson(String userId);
+
+    List<NewspaperPersonView> findPhotoLikeHistory(String userId);
 }
