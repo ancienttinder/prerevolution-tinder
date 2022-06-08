@@ -18,7 +18,7 @@ public class TranslateSlavonicServiceTest {
     void checkTranslate() {
         String rus = "Агафья несла снедь на синий стол";
         String oldSlavonic = "Агаѳья несла снѣдь на синiй столъ";
-        assertEquals(oldSlavonic,translateSlavonicService.translate(rus));
+        assertEquals(oldSlavonic,translateSlavonicService.translateRusToSlavonic(rus));
     }
 
 }

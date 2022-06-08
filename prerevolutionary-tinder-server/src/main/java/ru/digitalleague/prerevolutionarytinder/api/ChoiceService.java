@@ -1,10 +1,10 @@
 package ru.digitalleague.prerevolutionarytinder.api;
 
-import ru.digitalleague.prerevolutionarytinder.entity.Choice;
+import ru.digitalleague.prerevolutionarytinder.model.ChoiceView;
 
 public interface ChoiceService {
 
-    void save(Choice choice);
+    void save(ChoiceView choiceView);
 
-    void delete(Choice choice);
+    void delete(ChoiceView choiceView);
 }

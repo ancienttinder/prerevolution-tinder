@@ -1,24 +1,24 @@
-package ru.digitalleague.client.service;
+package ru.digitalleague.prerevolutionarytinder.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import ru.digitalleague.client.api.ImageService;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
+import ru.digitalleague.prerevolutionarytinder.api.NewspaperImageService;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
-import java.io.*;
-import java.util.Arrays;
 import java.util.UUID;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class DefaultImageService implements ImageService {
+public class DefaultNewspaperImageService implements NewspaperImageService {
 
     @Value("${file.path}")
     private Resource backgroundPath;
@@ -32,6 +32,10 @@ public class DefaultImageService implements ImageService {
     public static final int MAX_BODY_FONT_SIZE = 45;
     public static final int SYMBOLS_COUNT_IN_FONTSIZE_STEP = 10;
     public static final int MAX_HEADER_FONT_SIZE = 60;
+    public static final int HEADER_X = 75;
+    public static final int HEADER_Y = 100;
+    public static final int DRAW_HEADER_Y = 150;
+    public static final double HEADER_Y_STEP = 1.2;
 
     private BufferedImage bufferedImage;
 
@@ -40,6 +44,8 @@ public class DefaultImageService implements ImageService {
         log.info("Start image creation");
         File personImage = null;
         try {
+            String imageName = imagesPath.toString() + "/" + UUID.randomUUID() + "." + IMG_FORMAT;
+            personImage = new File(imageName);
             bufferedImage = ImageIO.read(backgroundPath.getInputStream());
             String header = extractHeader(description);
             Font headerFont = new Font(FONT_NAME, Font.BOLD, MAX_HEADER_FONT_SIZE - header.length() / 2);
@@ -47,20 +53,19 @@ public class DefaultImageService implements ImageService {
             Graphics g = bufferedImage.createGraphics();
             g.setColor(Color.BLACK);
             g.setFont(headerFont);
-            g.drawString(header, 75, 100);
+            g.drawString(header, HEADER_X, HEADER_Y);
             g.dispose();
             if (header.length() < description.length()) {
                 String body = description.replaceFirst(header, "");
                 drawBodyText(g, body);
             }
 
-            String imageName = imagesPath.toString() + UUID.randomUUID() + IMG_FORMAT;
-            personImage = new File(imageName);
             ImageIO.write(bufferedImage, IMG_FORMAT, personImage);
             log.info("End image creation");
-        } catch (IOException e) {
+        } catch (
+                IOException e) {
             log.error("Error Image Creation");
-            log.error(Arrays.toString(e.getStackTrace()));
+            log.error(e.getMessage(), e);
         }
         return personImage;
     }
@@ -73,7 +78,7 @@ public class DefaultImageService implements ImageService {
 
         log.debug("Draw body description");
         int symbolsInLine = BACKGROUND_WIDTH / bodyFontSize * 2;
-        int headerY = 150 + bodyFontSize;
+        int headerY = DRAW_HEADER_Y + bodyFontSize;
         StringBuilder line = new StringBuilder();
         for (String word : bodyWords) {
             if (line.length() + word.length() < symbolsInLine) {
@@ -83,8 +88,8 @@ public class DefaultImageService implements ImageService {
                 g = bufferedImage.getGraphics();
                 g.setFont(descriptionFont);
                 g.setColor(Color.DARK_GRAY);
-                g.drawString(line.toString(), 75, headerY);
-                headerY += bodyFontSize * 1.2;
+                g.drawString(line.toString(), HEADER_X, headerY);
+                headerY += bodyFontSize * HEADER_Y_STEP;
                 g.dispose();
                 line.delete(0, line.length());
                 line.append(word).append(" ");
@@ -94,7 +99,7 @@ public class DefaultImageService implements ImageService {
             g = bufferedImage.getGraphics();
             g.setFont(descriptionFont);
             g.setColor(Color.DARK_GRAY);
-            g.drawString(line.toString(), 75, headerY);
+            g.drawString(line.toString(), HEADER_X, headerY);
             g.dispose();
         }
     }

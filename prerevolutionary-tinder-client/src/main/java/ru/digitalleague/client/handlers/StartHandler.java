@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.digitalleague.client.api.Handler;
 import ru.digitalleague.client.api.RestServerExchanger;
+import ru.digitalleague.client.builder.PersonBuilder;
 import ru.digitalleague.client.model.Person;
 import ru.digitalleague.client.service.MessageService;
 import ru.digitalleague.client.type.BotState;
@@ -26,6 +27,7 @@ public class StartHandler implements Handler {
 
     private final MessageService messageService;
     private final RestServerExchanger restServerExchanger;
+    private final PersonBuilder personBuilder;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
@@ -39,7 +41,7 @@ public class StartHandler implements Handler {
         hello.setText(firstMessage);
         SendMessage enterNameMessage = createMessageTemplate(person);
         enterNameMessage.setText(messageService.getMessage("message.enter.name"));
-        person.setBotState(BotState.ENTER_ONE_QUESTION);
+        person = personBuilder.build(person, BotState.ENTER_ONE_QUESTION);
         restServerExchanger.save(person);
         log.info("End Start Handler");
         return Arrays.asList(hello, enterNameMessage);

@@ -412,7 +412,7 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
     }
 
     @Override
-    public String translate(String rus) {
+    public String translateRusToSlavonic(String rus) {
         final String[] keys = replaceSlavonic.keySet().toArray(new String[0]);
         final String[] values = replaceSlavonic.values().toArray(new String[0]);
         return StringUtils.replaceEach(replaceIAndAddSolidMark(rus), keys, values);
@@ -422,7 +422,7 @@ public class DefaultTranslateSlavonicService implements TranslateSlavonicService
         String oldSlavonic = "";
         char[] chRus = rus.toCharArray();
         for (int i = 0; i < chRus.length; i++) {
-            if (chRus[i] == 'и' && VOWELS.contains(String.valueOf(chRus[i + 1]))) {
+            if (chRus[i] == 'и' && i < (chRus.length - 1) && VOWELS.contains(String.valueOf(chRus[i + 1]))) {
                 oldSlavonic += 'i';
             } else {
                 oldSlavonic += chRus[i];

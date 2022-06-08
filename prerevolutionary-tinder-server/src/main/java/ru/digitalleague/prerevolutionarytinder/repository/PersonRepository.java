@@ -20,7 +20,7 @@ public interface PersonRepository extends JpaRepository<Person, Integer> {
             "   join tinder.persons ps on c.person_id = ps.id " +
             "where p.USER_ID = ?1 ";
 
-    Person findByUserId(String userId);
+    Person findPersonByUserId(String userId);
 
     @Query(value = CHOICE_PERSON_BY_USER_ID_QUERY, nativeQuery = true)
     List<Person> findChoicePersonByUserId(String userId);

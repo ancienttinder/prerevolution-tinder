@@ -5,10 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.digitalleague.prerevolutionarytinder.api.ChoiceService;
-import ru.digitalleague.prerevolutionarytinder.entity.Choice;
+import ru.digitalleague.prerevolutionarytinder.mapper.ChoiceMapper;
+import ru.digitalleague.prerevolutionarytinder.model.ChoiceView;
 import ru.digitalleague.prerevolutionarytinder.repository.ChoiceRepository;
-
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -16,23 +15,22 @@ import java.util.Optional;
 public class DefaultChoiceService implements ChoiceService {
 
     private final ChoiceRepository choiceRepository;
+    private final ChoiceMapper choiceMapper;
 
     @Override
     @Transactional
-    public void save(Choice choice) {
-        log.info("Save choice: {}", choice);
-        Optional<Choice> existingChoice = choiceRepository.findChoiceByPersonIdAndSelectedId(choice.getPersonId(), choice.getSelectedId());
-        if (!existingChoice.isPresent()) choiceRepository.save(choice);
-        log.info("Successfully saved choice: {}", choice);
+    public void save(ChoiceView choiceView) {
+        log.info("Save choice: {}", choiceView);
+        choiceRepository.save(choiceMapper.toEntity(choiceView));
+        log.info("Successfully saved choice: {}", choiceView);
     }
 
     @Override
     @Transactional
-    public void delete(Choice choice) {
-        log.info("Delete choice: {}", choice);
-        Optional<Choice> existingChoice = choiceRepository.findChoiceByPersonIdAndSelectedId(choice.getPersonId(), choice.getSelectedId());
-        existingChoice.ifPresent(value -> choiceRepository.deleteById(value.getId()));
-        log.info("Successfully delete choice: {}", choice);
+    public void delete(ChoiceView choiceView) {
+        log.info("Delete choice: {}", choiceView);
+        choiceRepository.delete(choiceMapper.toEntity(choiceView));
+        log.info("Successfully delete choice: {}", choiceView);
     }
 
 }

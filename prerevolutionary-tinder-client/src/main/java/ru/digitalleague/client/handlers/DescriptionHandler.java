@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.digitalleague.client.api.FieldProvider;
 import ru.digitalleague.client.api.Handler;
 import ru.digitalleague.client.api.RestServerExchanger;
 import ru.digitalleague.client.model.Person;
@@ -29,7 +28,7 @@ public class DescriptionHandler implements Handler {
 
     private final MessageService messageService;
     private final RestServerExchanger restServerExchanger;
-    private final FieldProvider fieldProvider;
+    private final ButtonCreator buttonCreator;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
@@ -37,11 +36,10 @@ public class DescriptionHandler implements Handler {
         SendMessage sendMessage = createMessageTemplate(person);
         String messageText = messageService.getMessage("message.error");
         if (person.getBotState() == operatedBotState()) {
-            person.setBotState(BotState.ENTER_FOUR_QUESTION);
-            person.setDescription(message);
+            person = new Person(person.getId(), person.getGender(), person.getName(), message, person.getSearchTerm(), person.getUserId(), BotState.ENTER_FOUR_QUESTION);
             messageText = messageService.getMessage("message.enter.search.term");
             List<Callback> callbacks = Arrays.asList(Callback.MADAM_SEARCH, Callback.SIR_SEARCH, Callback.ALL_SEARCH);
-            InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
+            InlineKeyboardMarkup inlineKeyboardMarkup = buttonCreator.create(callbacks);
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             restServerExchanger.save(person);
         }

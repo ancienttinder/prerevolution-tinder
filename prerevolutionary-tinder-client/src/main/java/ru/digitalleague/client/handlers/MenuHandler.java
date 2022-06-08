@@ -6,14 +6,13 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
-import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import ru.digitalleague.client.api.FieldProvider;
 import ru.digitalleague.client.api.Handler;
-import ru.digitalleague.client.api.ImageService;
+import ru.digitalleague.client.api.RestServerExchanger;
+import ru.digitalleague.client.builder.PersonBuilder;
+import ru.digitalleague.client.model.NewspaperPerson;
 import ru.digitalleague.client.model.Person;
 import ru.digitalleague.client.service.MessageService;
-import ru.digitalleague.client.support.ButtonCreator;
+import ru.digitalleague.client.support.MessageCreator;
 import ru.digitalleague.client.type.BotState;
 import ru.digitalleague.client.type.Callback;
 
@@ -30,9 +29,10 @@ import static ru.digitalleague.client.support.MessageCreator.createMessageTempla
 @Component
 @RequiredArgsConstructor
 public class MenuHandler implements Handler {
-    private final FieldProvider fieldProvider;
-    private final ImageService imageService;
     private final MessageService messageService;
+    private final RestServerExchanger restServerExchanger;
+    private final PersonBuilder personBuilder;
+    private final MessageCreator messageCreator;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(Person person, String message) {
@@ -40,18 +40,16 @@ public class MenuHandler implements Handler {
         List<PartialBotApiMethod<? extends Serializable>> messageList = new ArrayList<>();
         SendMessage sendMessage = createMessageTemplate(person);
         messageList.add(sendMessage);
-        person.setBotState(BotState.MENU);
-        File imageLocation = imageService.getImage(person.getDescription());
+        person = personBuilder.build(person, BotState.MENU);
+        person = restServerExchanger.save(person);
+        NewspaperPerson newspaperPerson = restServerExchanger.getPhotoPersonByUserId(person.getUserId());
+        File imageLocation = newspaperPerson.getNewspaperImage();
         if (imageLocation == null) {
             sendMessage.setText(messageService.getMessage("message.image.error"));
             messageList.add(sendMessage);
             return messageList;
         }
-        SendPhoto sendPhoto = new SendPhoto(person.getUserId(),new InputFile(imageLocation));
-        sendPhoto.setCaption(person.getGender() + ", " + person.getName());
-        List<Callback> callbacks = Arrays.asList(Callback.EDIT, Callback.FIND_SUITABLE_PERSON,Callback.LIKE_HISTORY);
-        InlineKeyboardMarkup inlineKeyboardMarkup = ButtonCreator.create(callbacks, fieldProvider);
-        sendPhoto.setReplyMarkup(inlineKeyboardMarkup);
+        SendPhoto sendPhoto = messageCreator.getPhotoMessage(person, newspaperPerson, Arrays.asList(Callback.EDIT, Callback.FIND_SUITABLE_PERSON, Callback.LIKE_HISTORY));
         messageList.clear();
         messageList.add(sendPhoto);
         log.info("End Menu Handler");

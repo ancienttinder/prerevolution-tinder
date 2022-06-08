@@ -5,7 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -35,4 +36,7 @@ public class Person {
 
     @Column(name = "bot_state")
     private String botState;
+
+    @Column(name = "image_path")
+    private String imagePath;
 }

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.digitalleague.prerevolutionarytinder.api.PersonService;
 import ru.digitalleague.prerevolutionarytinder.entity.Person;
+import ru.digitalleague.prerevolutionarytinder.model.NewspaperPersonView;
+import ru.digitalleague.prerevolutionarytinder.model.PersonView;
 
 import java.util.List;
 
@@ -20,27 +22,27 @@ public class PersonController {
     }
 
     @GetMapping("/find/person/{userId}")
-    public Person findPersonByUserId(@PathVariable String userId) {
+    public PersonView findPersonByUserId(@PathVariable String userId) {
         return personService.findByUserId(userId);
     }
 
-    @GetMapping("/find/choice/{userId}")
-    public Person findChoicePersonByUserId(@PathVariable String userId) {
-        return personService.findByUserId(userId);
+    @GetMapping("/find/photo/person/{userId}")
+    public NewspaperPersonView findPhotoPersonByUserId(@PathVariable String userId) {
+        return personService.findPhotoByUserId(userId);
     }
 
-    @GetMapping("/find/suitable/persons/{userId}")
-    public List<Person> findSuitablePersonByUserId(@PathVariable String userId) {
-        return personService.findSuitablePerson(userId);
+    @GetMapping("/find/photo/suitable/persons/{userId}")
+    public List<NewspaperPersonView> findPhotoSuitablePersonByUserId(@PathVariable String userId) {
+        return personService.findPhotoSuitablePerson(userId);
     }
 
-    @GetMapping("/find/history/{userId}")
-    public List<Person> findLikeHistoryByUserId(@PathVariable String userId) {
-        return personService.findLikeHistory(userId);
+    @GetMapping("/find/photo/history/{userId}")
+    public List<NewspaperPersonView> findPhotoLikeHistoryByUserId(@PathVariable String userId) {
+        return personService.findPhotoLikeHistory(userId);
     }
 
     @PostMapping("/save")
-    public Person savePerson(@RequestBody Person person) {
+    public PersonView savePerson(@RequestBody PersonView person) {
         return personService.save(person);
     }
 }
